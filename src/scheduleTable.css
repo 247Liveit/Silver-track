@@ -1,0 +1,11 @@
+.table-container {
+  overflow-x: auto;
+}
+
+.fixed-column {
+  position: sticky;
+  left: 0;
+  background-color: gray;
+  background: inherit;
+  z-index: 999; /* Ensures the fixed column stays on top */
+}
