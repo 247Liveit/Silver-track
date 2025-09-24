@@ -8,7 +8,7 @@ type TableActionsProps = {
     showEdit?: boolean;
     handleAction: (event: any, type: number) => void;
     Item: any;
-    viewEditOnly?: boolean;
+    dontShowDeleteBtn?: boolean;
     viewShowBtn?: boolean;
     editLink?: boolean;
     generateLink?: boolean;
@@ -20,7 +20,7 @@ export default function TableActions({
     showEdit = true,
     handleAction,
     Item,
-    viewEditOnly = false,
+    dontShowDeleteBtn: viewEditOnly = false,
     viewShowBtn = false,
     editLink = false,
     generateLink = false,

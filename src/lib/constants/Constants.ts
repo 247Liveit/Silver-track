@@ -71,4 +71,4 @@ export const LOCATIONSHIFTTYPEARRAY = [
   ]
 
   
-  export const GuardType = {"0":"SubCon","1":"In-House"}
+  export const GuardType = {"0":"Sub Contractor","1":"In-House"}

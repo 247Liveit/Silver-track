@@ -65,10 +65,10 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onChange}  >
       <DialogContent className={className} onPointerDownOutside={allowDismissal ? () => { } : (e) => e.preventDefault()}>
-        {/* <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader> */}
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
         <div>{children}</div>
       </DialogContent>
     </Dialog>

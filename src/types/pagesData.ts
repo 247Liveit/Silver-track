@@ -25,8 +25,12 @@ export type Location = {
     name: string;
     shortName: string;
     department: string;
+    location: string;
+    reference: string;
     image: string;
     address: string;
+    billingAddress: string;
+    other: string;
     created_at: string;
     geoLocationUrl: string;
     normalRate: number;
@@ -39,6 +43,7 @@ export type Location = {
     locationGuardType: string;
     clientId:number;
     client:Client;
+    clientName?:string|undefined;
 
 }
 

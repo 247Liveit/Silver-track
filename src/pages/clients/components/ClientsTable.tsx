@@ -17,39 +17,24 @@ import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { useSearchParams } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { BuildingIcon } from "lucide-react";
+import ClientLocations from "./ClientLocations";
 
 export default function ClientsTable({ items: data, setItems }: { items: PaginationApiType<Client> | undefined, setItems: any }) {
     const [searchParams,] = useSearchParams();
     const search = searchParams.get('search') || '';
 
-    const [isEdit, setIsEdit] = useState(false);
     const { isOpen, setIsOpen } = useModalHook();
     const [currentItem, setCurrentItem] = useState<Client | null>(data ? (data.items?.length > 0 ? data[0] : null) : null);
-    const [openDeleteDialog, setIsOpenDialog] = useState(false);
     const axios = useAxiosAuth();
     const { toast } = useToast()
     const handleSelection = function (selectedItem, type) {
         setCurrentItem(prev => {
             return selectedItem
         });
-        switch (type) {
-            case 1: {
-                setIsEdit(true);
-                setIsOpen("edit");
-                break;
-            }
-            case 2: {
-                setIsOpen("view");
-                setIsEdit(false);
-                break;
-            }
-            case 3: {
-                setIsOpenDialog(true);
-                break;
-            }
-
-        }
-
+        setIsOpen(type);
+        
     };
 
     return (
@@ -64,7 +49,7 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                                 return (<tr key={item.id}>
                                     <td className="border-b border-[#eee] py-2 px-2   text-center">
                                         <h5 className="font-semibold text-black text-center">
-                                            {item.id} {(item.zip =="00" && item.phone =="000000") ?<Badge variant="destructive">Needs an Update</Badge>:""}
+                                            {item.id} {(item.zip == "00" && item.phone == "000000") ? <Badge variant="destructive">Needs an Update</Badge> : ""}
                                         </h5>
                                     </td>
                                     <td className="border-b border-[#eee] py-2 px-2   text-center">
@@ -88,7 +73,19 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                                         </h5>
                                     </td>
                                     <td className="border-b border-[#eee] py-2 px-2 text-center">
-                                        <TableActions link='/clients' handleAction={handleSelection} Item={item} />
+                                        <TableActions link='/clients' handleAction={handleSelection} Item={item} showEdit={false} dontShowDeleteBtn={true} >
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <button
+                                                        className="hover:bg-gray-200 hover:rounded-2xl ml-2 p-1"
+                                                        onClick={() => handleSelection(item,'showLocaitons')}
+                                                    >
+                                                        <BuildingIcon className="h-5 w-5 text-orange-500" />
+                                                    </button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Locations</TooltipContent>
+                                            </Tooltip>
+                                        </TableActions>
                                     </td>
                                 </tr>)
                             })}
@@ -101,64 +98,20 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                     }
                     <div className="flex gap-3 mb-4">
                         <Modal
-                            key={"edit"}
-                            isOpen={isOpen === 'edit' || isOpen === 'view'}
-                            onClose={() => { setIsOpen("") }}
-                            className={'!bg-background !px-1 w-full lg:w-[85%]'}
-                        >
-                            <h5 className='text-2xl font-bold px-4'>{"Update Client"}</h5>
-
-                            <CustomFormLayout key={"formEditView"} item={{...currentItem,termId:currentItem?.termId+""}} url='/clients'
-                                redirectUrl='' edit={isEdit && isOpen == "edit"} showNewBtn={false}
-                                validationSchema={clientSchema}
-                                onSave={(clients: User) => {
-                                    setItems((prev: ItemType<User>) => {
-                                        const newData = prev.data.map(item => {
-                                            if (item.id === clients.id) {
-                                                item = clients;
-                                            }
-                                            return item
-                                        })
-
-                                        return { ...prev, data: newData }
-
-                                    })
-                                    setIsOpen("")
-                                }}>
-                                <ClientsForm />
-                            </CustomFormLayout>
-
-
-                        </Modal>
-
-                    </div>
-
-                    <div className="flex gap-3 mb-4">
-                        <Modal
-                            key={"delete"}
                             userPopup={true}
-                            isOpen={openDeleteDialog}
-                            onClose={() => { setIsOpenDialog(false) }}
-                            className={'!bg-background !px-1'}
-                        >
-                            <div className="rounded-md bg-gray-50 p-4 md:p-6">
-                                <p>Are you sure you want to <span className="font-bold">de-activate?</span></p>
-                                <div className="flex items-center justify-between mt-4">
-                                    <Button
-                                        className="flext-1 bg-red-500 disabled:bg-gray-500"
-                                        onClick={() => {
+                            key={"showLocaitons"}
+                            isOpen={isOpen === 'showLocaitons'}
+                            onClose={() => { setIsOpen("") }}
+                            className={'!bg-background !px-1 w-full lg:w-[85%]'}>
+                            <h5 className='text-2xl font-bold px-4'>{"Client Locations"}</h5>
 
-                                            onDelete(`/clients/${currentItem?.id}`, currentItem, axios, toast, setItems);
-                                            setIsOpenDialog(false);
-                                        }}>
-                                        Yes
-                                    </Button>
-                                    <Button className="flext-1" onClick={() => setIsOpenDialog(false)}>No</Button>
-                                </div>
-                            </div>
+                            
+                            <ClientLocations client={currentItem} />
+                        
                         </Modal>
 
                     </div>
+
                 </div>
 
             </div>
