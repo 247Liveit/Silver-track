@@ -37,21 +37,22 @@ export type Location = {
     overTimeRate: number;
     specialDayRate: number;
     status: boolean;
-    specialDays:SpecialDay[],
-    shifts:LocationShift[],
-    locationSpecialDays:LocationSpecialDay[],
+    specialDays: SpecialDay[],
+    shifts: LocationShift[],
+    locationSpecialDays: LocationSpecialDay[],
     locationGuardType: string;
-    clientId:number;
-    client:Client;
-    clientName?:string|undefined;
+    clientId: number;
+    client: Client;
+    clientName?: string | undefined;
+    issueTypes?: IssueType[];
 
 }
 
-export type LocationExtraCharges ={
-    id:number;
-    description:string;
-    amount:number;
-    type:string
+export type LocationExtraCharges = {
+    id: number;
+    description: string;
+    amount: number;
+    type: string
 }
 
 export type Employee = {
@@ -71,7 +72,7 @@ export type Employee = {
 
 export type EmployeeShift = {
     id?: number;
-    employeeId?:number;
+    employeeId?: number;
     startDate: string;
     endDate: string;
     startTime: string;
@@ -83,7 +84,7 @@ export type EmployeeShift = {
     comment?: string;
     payRate?: number;
     payHours?: number;
-    payBreak?:boolean;
+    payBreak?: boolean;
     billRate?: number;
     billHours?: number;
     billBreak?: boolean;
@@ -130,14 +131,14 @@ export type EmployeeLocationHistory = {
     shiftName: string;
     firstStartDate: Date;
     lastEndDate: Date;
-    startTime:string;
-    endTime:string;
-    
+    startTime: string;
+    endTime: string;
+
 }
 
 export type LocationShift = {
     id?: number;
-    locationId?: number|undefined;
+    locationId?: number | undefined;
     shiftName: string;
     shiftType: string;
     shiftStartDate: string;
@@ -179,10 +180,10 @@ export type ShiftScheduleTable = {
     shiftId: string;
     shiftName: string;
     fromDate: Date;
-    startTime:string;
-    endTime:string;
-    planStartTime:string;
-    planEndTime:string;
+    startTime: string;
+    endTime: string;
+    planStartTime: string;
+    planEndTime: string;
     toDate: Date;
     daysShifts: { [date: string]: DayShiftDto[] }
 }
@@ -198,7 +199,7 @@ export enum ShiftType {
     Normal = 1,
     Overtime = 2,
     SpecialDay = 3
-  }
+}
 
 export type DayShiftDto = {
     employeeShiftId: string;
@@ -213,8 +214,8 @@ export type DayShiftDto = {
     endTime: string;
     planStartTime: string;
     planEndTime: string;
-    comment:string;
-    alerts: {message:string,type:string}[];
+    comment: string;
+    alerts: { message: string, type: string }[];
 
 }
 
@@ -223,4 +224,30 @@ export type City = {
     name: string;
     image: string;
     country_id: number;
+}
+
+export enum IssueTypes {
+    Security = "Security",
+    Parking = "Parking",
+    Maintenance = "Maintenance",
+}
+export enum IssueLevels {
+    Level1 = "Level1",
+    Level2 = "Level2",
+    Level3 = "Level3",
+
+}
+
+export type IssueType = {
+    id:number;
+    name: string;
+    description: string;
+    isActive: boolean;
+    displayForDispatch: boolean;
+    displayForWebUsers: boolean;
+    autoClose: boolean;
+    checkPointOnly: boolean;
+    displayInHandHeld: boolean;
+    type: IssueTypes;
+    level: IssueLevels;
 }

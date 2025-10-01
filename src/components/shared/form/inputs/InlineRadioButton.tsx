@@ -14,7 +14,6 @@ function cInlineRadioButton({ title, name, items, error, onChange, vertical = fa
             control={form.control}
             name={name}
             render={({ field }) => {
-                console.log(field)
                 return <FormItem className="mb-2">
                     <FormLabel>{title}</FormLabel>
                     <FormControl>

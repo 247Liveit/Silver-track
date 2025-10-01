@@ -2,7 +2,7 @@ import PageHead from '@/components/shared/page-head';
 import { useSearchParams } from 'react-router-dom';
 import PopupModal from '@/components/shared/popup-modal';
 import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
-import ClientsForm from './components/ClientForm';
+import ClientsForm from './components/forms/ClientForm';
 import { Client } from '@/types/types';
 import { useGetSingle } from '@/lib/api/queries/generic';
 import ClientsTable from './components/ClientsTable';

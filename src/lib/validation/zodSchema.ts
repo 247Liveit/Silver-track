@@ -13,6 +13,20 @@ export const createUserSchema = z.object({
     groupId: z.union([z.number(), z.string().min(1, { message: "Group is Required" })]).optional(),
     system: z.any(),
 });
+export const createIssueTypeSchema = z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    description: z.string().min(1, { message: "Description is required" }),
+    type: z.enum(['Security', 'Parking', 'Maintenance'], { message: "Type is required" }), // Replace with actual types
+    level: z.enum(['Level1', 'Level2', 'Level3'], { message: "Level is required" }), // Replace with actual levels
+    isActive: z.coerce.boolean().optional(),
+    displayForDispatch: z.coerce.boolean().optional(),
+    displayForWebUsers: z.coerce.boolean().optional(),
+    autoClose: z.coerce.boolean().optional(),
+    checkPointOnly: z.coerce.boolean().optional(),
+    displayInHandHeld: z.coerce.boolean().optional(),
+    addTo: z.string().optional(),
+    locationId: z.coerce.number({message:"Location is Required"}).optional(),
+});
 
 export const createUserGroupSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),

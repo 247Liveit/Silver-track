@@ -14,12 +14,12 @@ function CInputSimple({ title, name, type, icon, placeholder,value, error, ...re
                         id={name}
                         name={name}
                         type={type}
-
+                        ref={ref}
                         // step={`${res.step??"0.01"}`}
                         placeholder={placeholder}
-                        className={`peer block w-full ${res.disabled ? '' : 'cursor-pointer'} rounded-md border ${["time"].includes(type+"")?"":"py-2"} pl-10 text-sm outline-2 placeholder:text-gray-500
-     ${error ? 'border-red-300' : 'border-gray-200'} ${res.disabled ? 'text-gray-400' : 'text-black'} p-1 `}
-                        ref={ref}
+                        className={`peer block w-full ${res.disabled ? '' : 'cursor-pointer'} rounded-md border
+                                    ${["time"].includes(type+"")?"":"py-2"} pl-10 text-sm outline-2 placeholder:text-gray-500
+                                    ${error ? 'border-red-300' : 'border-gray-200'} ${(res.disabled && !res.inputClassName) ? 'text-gray-400' : 'text-black'} p-1 ${res.inputClassName}`}
                     />
                 ) : (
                     <textarea

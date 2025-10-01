@@ -7,6 +7,7 @@ export interface CustomInputProps extends React.InputHTMLAttributes<HTMLInputEle
     type?: string,
     rows?: number|undefined,
     placeholder: string,
+    inputClassName?: string|undefined,
     icon ?: ReactElement<any, string | JSXElementConstructor<any>>|undefined
     error?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined,
 }

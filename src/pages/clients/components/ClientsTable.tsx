@@ -11,7 +11,7 @@ import { useModalHook } from "@/providers/modalContext";
 import { Client, User } from "@/types/types";
 import { onDelete } from "@/lib/api/axios/delete-item";
 import { clientSchema } from "@/lib/validation/zodSchema";
-import ClientsForm from "./ClientForm";
+import ClientsForm from "./forms/ClientForm";
 import Pagination from "@/components/Pagination";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { useSearchParams } from "react-router-dom";

@@ -17,7 +17,7 @@ import { Client } from "@/types/types";
 import { Modal } from "@/components/ui/modal";
 import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
 import { clientSchema } from "@/lib/validation/zodSchema";
-import ClientsForm from "../clients/components/ClientForm";
+import ClientsForm from "../clients/components/forms/ClientForm";
 import { Button } from "@/components/ui/button";
 import { dateFromat } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";

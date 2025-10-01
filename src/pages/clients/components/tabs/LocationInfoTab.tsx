@@ -23,8 +23,15 @@ export default function LocationInfoTab({ location }: { location: Location | nul
         <div className="space-y-4">
           <div className="grid lg:grid-cols-3 grid-cols-1 gap-2">
             <div>
-              <CustomInput className='dark:text-black' title="Type" name="locationGuardType" defaultValue={GuardType[location.locationGuardType]}
-                placeholder='' icon={<></>} type='single' disabled={true} />
+              <CustomInput
+                className='dark:text-black'
+                title="Type"
+                name="locationGuardType"
+                defaultValue={GuardType[location.locationGuardType]}
+                placeholder='' icon={<></>} type='single'
+                disabled={true}
+                inputClassName='text-black'
+              />
 
             </div>
             <div className='col-span-2 grid lg:grid-cols-2 gap-2'>
@@ -35,6 +42,7 @@ export default function LocationInfoTab({ location }: { location: Location | nul
                 type="string"
                 placeholder="Location Name"
                 disabled={true}
+                inputClassName='text-black'
               />
               <CustomInput
                 defaultValue={location.client?.name || location.clientName}
@@ -44,6 +52,7 @@ export default function LocationInfoTab({ location }: { location: Location | nul
                 placeholder="Client Name"
                 error=""
                 disabled={true}
+                inputClassName='text-black'
               />
 
             </div>
@@ -55,6 +64,7 @@ export default function LocationInfoTab({ location }: { location: Location | nul
                 type="string"
                 placeholder="Location"
                 disabled={true}
+                inputClassName='text-black'
               />
             </div>
 
@@ -70,16 +80,24 @@ export default function LocationInfoTab({ location }: { location: Location | nul
                 type="string"
                 placeholder="Reference"
                 disabled={true}
+                inputClassName='text-black'
               />
             </div>
             <div>
-              <CustomInput defaultValue={location.status ? "ACTIVE" : "INACTIVE"} className='dark:text-black' title="Status" name="status"
-                placeholder='' icon={<></>} type='single' disabled={true} />
+              <CustomInput 
+                defaultValue={location.status ? "ACTIVE" : "INACTIVE"} 
+                className='dark:text-black' 
+                title="Status" name="status"
+                placeholder='' icon={<></>} 
+                type='single' disabled={true}
+                inputClassName='text-black'
+                />
 
             </div>
             <div>
               <CustomInput defaultValue={location.department} className='dark:text-black' title="Department" name="department"
                 disabled={true}
+                inputClassName='text-black'
                 placeholder='' icon={<></>} type='single' />
             </div>
           </div>

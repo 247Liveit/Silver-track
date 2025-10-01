@@ -19,6 +19,7 @@ export enum Resource {
     Reports = "reports",
     Preferences = "preferences",
     Locations = "locations",
+    IssueTypes = "issue-types",
     LocationShift = "location",
     Employees = "employees",
     EmployeeAvailabilities = "employee-availabilities",
@@ -57,14 +58,14 @@ export const rules: Rules = {
         [Action.Delete]: { can: "all", },
     },
     [Role.TRACKER_MANAGER]: {
-        [Action.Manage]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared] },
-        [Action.Create]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared] },
-        [Action.Read]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared] },
-        [Action.Update]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared] },
-        [Action.Delete]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared] },
+        [Action.Manage]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes] },
+        [Action.Create]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes] },
+        [Action.Read]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes] },
+        [Action.Update]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes] },
+        [Action.Delete]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes] },
     },
     [Role.TRACKER_READER]: {
-        [Action.Read]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.Locations] },
+        [Action.Read]: { can: [Resource.Invoices, Resource.Payments, Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.Locations,Resource.IssueTypes] },
         [Action.Update]: { can: [Resource.Invoices] },
     },
     [Role.TRACKER_CLIENT]: {
