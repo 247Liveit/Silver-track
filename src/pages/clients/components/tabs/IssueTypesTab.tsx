@@ -1,6 +1,6 @@
 import { TabsContent } from "@/components/ui/tabs";
-import { useGet } from "@/lib/api/queries/generic";
-import { IssueType, IssueTypes, IssueLevels, Location } from "@/types/pagesData";
+import { useGet, useGetSingle } from "@/lib/api/queries/generic";
+import { IssueType, IssueTypes, IssueLevels, Location, LocationIssueType } from "@/types/pagesData";
 import IssueTypeList from "../IssueTypeList";
 import { Modal } from "@/components/ui/modal";
 import { useState } from "react";
@@ -9,15 +9,19 @@ import { IssueTypeForm } from "../forms/IssueTypeForm";
 import { Button } from "@/components/ui/button";
 import { createIssueTypeSchema } from "@/lib/validation/zodSchema";
 import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
-import { set } from "date-fns";
+import useAxiosAuth from "@/lib/api/axios/hooks/useAxiosAuth";
+import { useToast } from "@/components/ui/use-toast";
+import { dateFromat } from "@/lib/utils";
 
 export default function IssueTypesTab({ location }: { location: Location | null }) {
   if (!location) return "No Location ! "
   const [isOpen, setIsOpen] = useState<string>("");
+  const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
   const [currentIssue, setCurrentIssue] = useState<IssueTypes | {}>({});
   const [params, setParams] = useState<{ type?: string[], level?: string[], isActive?: string[] }>({})
-
-  const { data, isLoading, refetch } = useGet<IssueType>('issue-types', {
+  const axios = useAxiosAuth()
+  const { toast } = useToast()
+  const { data, isLoading, refetch } = useGetSingle<{ issues: IssueType[], locationIssues: { id: number, location_id: number, issue_type_id: number }[] }>('issue-types', {
     type: params.type?.length ? params.type.join(",") : undefined,
     level: params.level?.length ? params.level.join(",") : undefined,
     isActive: params.isActive?.length ? params.isActive.join(",") : undefined,
@@ -42,11 +46,44 @@ export default function IssueTypesTab({ location }: { location: Location | null 
     setCurrentIssue(issueType);
     setIsOpen("Edit Issue");
   }
+  const onSelectionChange = (issueType: LocationIssueType[]) => {
+
+    if (location && !isPostLoading) {
+      setIsPostLoading(true);
+      const tost = toast({
+        title: "Please wait ...",
+        itemID: "formSubmitWaiting",
+      })
+      axios.patch("issue-types/" + location.id + '/add-issues-location', { issues: issueType.map(i => i.issue_type_id) }).then(() => {
+        refetch();
+        toast({
+          itemID: "SUCCSESS",
+          title: "Proceed",
+          description: dateFromat(new Date()),
+          variant: "success"
+        })
+      }).catch((err) => {
+        toast({
+          title: "Something went wrong !",
+          description: dateFromat(new Date()),
+          variant: "destructive"
+        })
+      }).finally(() => {
+
+        tost.dismiss();
+        setIsPostLoading(false);
+
+      });
+    }
+  }
   return (
     <TabsContent value="issues" className={`"w-full h-11/12 grid  m-4 `}>
       <section className="grid lg:grid-cols-3 grid-cols-1 gap-4 border border-gray-300 p-4 rounded">
         {isLoading ? <p className="col-span-2">Loading... </p> :
-          <IssueTypeList className="col-span-2" issues={data || []} selectedIssues={[]} onSelectionChange={() => { }} onEditClick={onEditIssueClick} />
+          <IssueTypeList className="col-span-2" issues={data?.issues || []}
+            selectedIssues={data?.locationIssues || []}
+            locationId={location.id}
+            onSelectionChange={onSelectionChange} onEditClick={onEditIssueClick} />
         }
         <div>
           <InlineCheckBoxSimple
@@ -94,12 +131,12 @@ export default function IssueTypesTab({ location }: { location: Location | null 
 
         key={"add"}
         isOpen={isOpen !== ""}
-        onClose={() => { setIsOpen("");setCurrentIssue({}) }}
+        onClose={() => { setIsOpen(""); setCurrentIssue({}) }}
         className={'!bg-background !px-1'}
       >
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
-         <CustomFormLayout url="/issue-types" validationSchema={createIssueTypeSchema} item={currentIssue} redirectUrl="" onSave={() => { refetch(); setIsOpen("");setCurrentIssue({}) }} >
-        <IssueTypeForm  locationId={location?.id}/>
+        <CustomFormLayout url="/issue-types" validationSchema={createIssueTypeSchema} item={currentIssue} redirectUrl="" onSave={() => { refetch(); setIsOpen(""); setCurrentIssue({}) }} >
+          <IssueTypeForm locationId={location.id}/>
         </CustomFormLayout>
       </Modal>
 

@@ -239,7 +239,7 @@ export enum IssueLevels {
 }
 
 export type IssueType = {
-    id:number;
+    id: number;
     name: string;
     description: string;
     isActive: boolean;
@@ -250,4 +250,10 @@ export type IssueType = {
     displayInHandHeld: boolean;
     type: IssueTypes;
     level: IssueLevels;
+}
+export type LocationIssueType = {
+    id: number;
+    location_id: number;
+    issue_type_id: number;
+
 }

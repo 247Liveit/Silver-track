@@ -5,7 +5,7 @@ import { FormContext } from "@/providers/formContext";
 import { IssueLevels, IssueTypes } from "@/types/pagesData";
 import { useContext, useEffect } from "react";
 
-export function IssueTypeForm() {
+export function IssueTypeForm({locationId}: {locationId:number}) {
     const form = useContext(FormContext);
     const isActive = form.watch('isActive');
     const displayForDispatch = form.watch('displayForDispatch');
@@ -15,7 +15,7 @@ export function IssueTypeForm() {
     const displayInHandHeld = form.watch('displayInHandHeld');
     console.log(form.errors)
     useEffect(() => {
-        form.setValue('locationId', form.itemState?.locationId);
+        form.setValue('locationId', locationId);
     }, [form.itemState?.locationId])
     return (
 

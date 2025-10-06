@@ -1,23 +1,29 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { IssueType } from '@/types/pagesData';
+import { IssueType, LocationIssueType } from '@/types/pagesData';
+import { itemsEqual } from '@dnd-kit/sortable/dist/utilities';
 import {  Edit2Icon } from 'lucide-react';
 import React from 'react';
 
 interface IssueTypeListProps {
     issues: IssueType[];
-    selectedIssues: number[];
-    onSelectionChange: (selectedIds: number[]) => void;
+    selectedIssues: LocationIssueType[];
+    onSelectionChange: (selectedIds:LocationIssueType[]) => void;
     className?: string;
     onEditClick?: any;
+    locationId?:number
 }
 
-const IssueTypeList: React.FC<IssueTypeListProps> = ({ issues, selectedIssues, onSelectionChange, className, onEditClick }) => {
-    const handleCheckboxChange = (id: number) => {
-        const isSelected = selectedIssues.includes(id);
+const IssueTypeList: React.FC<IssueTypeListProps> = ({ issues, selectedIssues,locationId, onSelectionChange, className, onEditClick }) => {
+   console.log(selectedIssues)
+    const handleCheckboxChange = (issue: IssueType) => {
+        const isSelected = selectedIssues.filter(item=> item.issue_type_id === issue.id).length > 0;
+        console.log(issue.id);
+        console.log(isSelected);
         const updatedSelection = isSelected
-            ? selectedIssues.filter(issueId => issueId !== id)
-            : [...selectedIssues, id];
+            ? selectedIssues.filter(issueId => issueId.issue_type_id !== issue.id)
+            : [...selectedIssues, {issue_type_id:issue.id,location_id:locationId||0,id:0}];
+            console.log(updatedSelection);
         onSelectionChange(updatedSelection);
     };
 
@@ -31,8 +37,8 @@ const IssueTypeList: React.FC<IssueTypeListProps> = ({ issues, selectedIssues, o
                             <input
                                 className='p-1 gap-2 m-2'
                                 type="checkbox"
-                                checked={selectedIssues.includes(issue.id)}
-                                onChange={() => handleCheckboxChange(issue.id)}
+                                checked={selectedIssues.filter(item=> item.issue_type_id === issue.id).length > 0}
+                                onChange={() => handleCheckboxChange(issue)}
                             />
                             {issue.name}
                             <Badge className='ml-2 text-white' variant={issue.isActive?"success":"destructive"}>{issue.isActive?"Active":"Inactive"}</Badge>
