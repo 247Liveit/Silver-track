@@ -12,6 +12,7 @@ import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
 import useAxiosAuth from "@/lib/api/axios/hooks/useAxiosAuth";
 import { useToast } from "@/components/ui/use-toast";
 import { dateFromat } from "@/lib/utils";
+import { onDelete } from "@/lib/api/axios/delete-item";
 
 export default function IssueTypesTab({ location }: { location: Location | null }) {
   if (!location) return "No Location ! "
@@ -42,9 +43,12 @@ export default function IssueTypesTab({ location }: { location: Location | null 
       }));
     }
   };
-  const onEditIssueClick = (issueType: IssueType) => {
+  const onDeleteEditIssueClick = (issueType: IssueType, type: string|undefined = "edit") => {
     setCurrentIssue(issueType);
-    setIsOpen("Edit Issue");
+    if (type === "edit")
+      setIsOpen("Edit Issue");
+    else
+      setIsOpen("Delete Issue");
   }
   const onSelectionChange = (issueType: LocationIssueType[]) => {
 
@@ -83,7 +87,7 @@ export default function IssueTypesTab({ location }: { location: Location | null 
           <IssueTypeList className="col-span-2" issues={data?.issues || []}
             selectedIssues={data?.locationIssues || []}
             locationId={location.id}
-            onSelectionChange={onSelectionChange} onEditClick={onEditIssueClick} />
+            onSelectionChange={onSelectionChange} onDeleteEditClick={onDeleteEditIssueClick} />
         }
         <div>
           <InlineCheckBoxSimple
@@ -130,16 +134,40 @@ export default function IssueTypesTab({ location }: { location: Location | null 
       <Modal
 
         key={"add"}
-        isOpen={isOpen !== ""}
+        isOpen={isOpen !== "Delete Issue" && isOpen !== ""}
         onClose={() => { setIsOpen(""); setCurrentIssue({}) }}
         className={'!bg-background !px-1'}
       >
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
         <CustomFormLayout url="/issue-types" validationSchema={createIssueTypeSchema} item={currentIssue} redirectUrl="" onSave={() => { refetch(); setIsOpen(""); setCurrentIssue({}) }} >
-          <IssueTypeForm locationId={location.id}/>
+          <IssueTypeForm locationId={location.id} />
         </CustomFormLayout>
       </Modal>
+      <div className="flex gap-3 mb-4">
+        <Modal
+          key={"delete"}
+          userPopup={true}
+          isOpen={isOpen === "Delete Issue"}
+          onClose={() => { setIsOpen(""); setCurrentIssue({}) }}
+          className={'!bg-background !px-1'}
+        >
+          <div className="rounded-md bg-gray-50 p-4 md:p-6">
+            <p>Are you sure you want to delete?</p>
+            <div className="flex items-center justify-between mt-4">
+              <Button
+                className="flext-1 bg-red-500 disabled:bg-gray-500"
+                onClick={() => {
+                  onDelete(`/issue-types/${(currentIssue as IssueType)?.id}`, currentIssue, axios, toast, refetch);
+                  setIsOpen(""); setCurrentIssue({});
+                }}>
+                Yes
+              </Button>
+              <Button className="flext-1" onClick={() => { setIsOpen(""); setCurrentIssue({}) }}>No</Button>
+            </div>
+          </div>
+        </Modal>
 
+      </div>
     </TabsContent>
   );
 }
