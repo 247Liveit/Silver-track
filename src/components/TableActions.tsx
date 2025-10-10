@@ -3,6 +3,11 @@ import useAccessControl from "@/rbac/use-access-control";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
+export enum ActionType {
+    Edit = 1,
+    View = 2,
+    Delete = 3,
+}
 type TableActionsProps = {
     link?: string;
     showEdit?: boolean;
@@ -41,7 +46,7 @@ export default function TableActions({
                         <button className="hover:bg-gray-200 hover:rounded-2xl ml-2 p-1">
                             <EyeIcon
                                 className="h-5 w-5 text-blue-500"
-                                onClick={(event) => handleClick(Item, 2)}
+                                onClick={(event) => handleClick(Item, ActionType.View)}
                             />
                         </button>
                     </TooltipTrigger>
@@ -55,7 +60,7 @@ export default function TableActions({
                         <button className="hover:bg-gray-200 hover:rounded-2xl ml-2 p-1">
                             <PencilIcon
                                 className="h-5 w-5 text-amber-500"
-                                onClick={(event) => handleClick(Item, 1)}
+                                onClick={(event) => handleClick(Item, ActionType.Edit)}
                             />
                         </button>
                     </TooltipTrigger>
@@ -68,7 +73,7 @@ export default function TableActions({
                     <TooltipTrigger asChild>
                         <button
                             className="hover:bg-gray-200 hover:rounded-2xl ml-2 p-1"
-                            onClick={() => handleAction(Item, 3)}
+                            onClick={() => handleAction(Item, ActionType.Delete)}
                         >
                             <TrashIcon className="h-5 w-5 text-red-500" />
                         </button>

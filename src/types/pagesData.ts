@@ -251,6 +251,22 @@ export type IssueType = {
     type: IssueTypes;
     level: IssueLevels;
 }
+
+export type Checkpoint = {
+    id: number;
+    name: string;
+    address: string;
+    qrCode: string;
+    officerInstuction: string;
+    reportNote: string;
+    isActive: boolean;
+    allowKeepOpen: boolean;
+    reportIfMissing: boolean;
+    requiredPhoto: boolean;
+    issueType: IssueType;
+    issue_type_id: IssueType;
+    location: Location;
+}
 export type LocationIssueType = {
     id: number;
     location_id: number;

@@ -5,7 +5,7 @@ import IssueTypeList from "../IssueTypeList";
 import { Modal } from "@/components/ui/modal";
 import { useState } from "react";
 import InlineCheckBoxSimple from "@/components/shared/form/inputs/InlineCheckBoxSimple";
-import { IssueTypeForm } from "../forms/IssueTypeForm";
+import { CheckPointForm } from "../forms/CheckpointForm";
 import { Button } from "@/components/ui/button";
 import { createIssueTypeSchema } from "@/lib/validation/zodSchema";
 import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
@@ -13,6 +13,7 @@ import useAxiosAuth from "@/lib/api/axios/hooks/useAxiosAuth";
 import { useToast } from "@/components/ui/use-toast";
 import { dateFromat } from "@/lib/utils";
 import { onDelete } from "@/lib/api/axios/delete-item";
+import { IssueTypeForm } from "../forms/IssueTypeForm";
 
 export default function IssueTypesTab({ location }: { location: Location | null }) {
   if (!location) return "No Location ! "

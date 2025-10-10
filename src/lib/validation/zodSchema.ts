@@ -27,6 +27,20 @@ export const createIssueTypeSchema = z.object({
     addTo: z.string().optional(),
     locationId: z.coerce.number({message:"Location is Required"}).optional(),
 });
+export const createCheckPointTypeSchema = z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    address: z.string().min(1, { message: "address is required" }),
+    qrCode: z.string().min(1, { message: "qrCode value is required" }),
+    reportNote: z.string().min(1, { message: "qrCode value is required" }),
+    officerInstuction: z.string().min(1, { message: "qrCode value is required" }),
+    isActive: z.coerce.boolean().optional(),
+    allowKeepOpen: z.coerce.boolean().optional(),
+    requiredPhoto: z.coerce.boolean().optional(),
+    reportIfMissing: z.coerce.boolean().optional(),
+    createIssueType: z.coerce.boolean().optional(),
+    issue_type_id: z.coerce.number({message:"IssueType is Required"}).optional(),
+    locationId: z.coerce.number({message:"Location is Required"}).optional(),
+});
 
 export const createUserGroupSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),

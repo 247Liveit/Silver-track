@@ -22,13 +22,13 @@ function CSelect({ title, name, placeholder, className, selected, options, items
     }, [options]);
 
     const selectedValue = typeof form?.watch === "function" ? form?.watch(name) : selected;
-
+    console.log("Selected val",selectedValue);
     React.useEffect(() => {
         // if (form?.getValues(name) || form?.getValues(name) === "0") {
-            const selectedItem = items.filter((item) => item.value === String(selectedValue));
-            if (selectedItem.length > 0) {
-                setValue(generateValue(selectedItem[0]));
-            }
+        const selectedItem = items.filter((item) => item.value === String(selectedValue));
+        if (selectedItem.length > 0) {
+            setValue(generateValue(selectedItem[0]));
+        }
         // } else {
         //     setValue("");
         //     setValueLabel("");
@@ -50,17 +50,24 @@ function CSelect({ title, name, placeholder, className, selected, options, items
                             if (onChange) onChange(createChangeEvent(name, newValue));
                             field.onChange(newValue); // Pass the raw value to `field.onChange`
                         }}
-                        defaultValue={field.value}
+                        defaultValue={field.value+""}
                     >
+                        
                         <FormControl>
                             <SelectTrigger className="">
-                                <SelectValue placeholder={placeholder || "Select"} />
+                                <SelectValue placeholder={(!res.otherOption ?(placeholder || "Select"):"")} />
                             </SelectTrigger>
                         </FormControl>
                         <SelectContent>
+                            {res.otherOption &&
+
+                                <SelectItem value={"0"}>
+                                    Please Select
+                                </SelectItem>
+                            }
                             {items.map((option: SelectOption) => (
-                                <SelectItem key={option.value} value={option.value+""}>
-                                    {option.label}
+                                <SelectItem  key={option.value} value={option.value + ""}>
+                                    {option.label} 
                                 </SelectItem>
                             ))}
                         </SelectContent>

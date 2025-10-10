@@ -7,6 +7,7 @@ import { Client } from "@/types/types";
 import { useState } from "react";
 import LocationInfoTab from "./tabs/LocationInfoTab";
 import IssueTypesTab from "./tabs/IssueTypesTab";
+import CheckpointTab from "./tabs/CheckpointsTab";
 
 export default function ClientLocations({ client, className }: { client: Client | null, className?: string | undefined }) {
 
@@ -44,10 +45,12 @@ export default function ClientLocations({ client, className }: { client: Client 
                         <TabsList className="grid grid-cols-2  w-full lg:w-fit lg:flex lg:items-left gap-2">
                             <TabsTrigger value="locationInfo">Location Info</TabsTrigger>
                             <TabsTrigger value="issues">Issues Typs</TabsTrigger>
+                            <TabsTrigger value="Checkpoints">Checkpoints</TabsTrigger>
                         </TabsList>
                         <div className="w-full border-b mt-1 mb-1"></div>
                         <LocationInfoTab location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                         <IssueTypesTab location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
+                        <CheckpointTab location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                     </Tabs>
 
                 </div>
