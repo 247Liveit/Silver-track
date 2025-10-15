@@ -10,6 +10,7 @@ const PreferncesPage = lazy(() => import('@/pages/home/preferences/index'));
 const NotFound = lazy(() => import('@/pages/not-found'));
 const UsersPage = lazy(() => import('@/pages/users'));
 const UserGroupsPage = lazy(() => import('@/pages/user-groups'));
+const UserDevicePage = lazy(() => import('@/pages/user-devices'));
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,10 @@ export default function AppRouter() {
             {
               path: 'preferences',
               element: <PreferncesPage />
+            },
+            {
+              path: 'user-devices',
+              element: <UserDevicePage />
             },
           ]
         }

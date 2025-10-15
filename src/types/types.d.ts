@@ -1,43 +1,57 @@
-import {Quiz} from "@/types/main/types";
+import { Quiz } from "@/types/main/types";
 import { Employee, Location, LocationShift } from "./pagesData";
 
 export type User = {
   id: number;
   name: string;
   email: string;
-  created_at?: string|undefined;
-  isActive: boolean|string;
-  roleId: number|string;
+  created_at?: string | undefined;
+  isActive: boolean | string;
+  roleId: number | string;
   roleName: string;
+  phone: string;
   imageUrl?: string;
   orders?: Order[];
-  role:string
-  employee:Employee
+  role: string
+  employee: Employee
 };
 export type UserGroup = {
   id: number;
   name: string;
-  created_at?: string|undefined;
-  locations ?:Location[]|undefined;
-  users ?:user[]|undefined;
-  };
+  created_at?: string | undefined;
+  locations?: Location[] | undefined;
+  users?: User[] | undefined;
+};
+
+export type UserDevice = {
+  id: number;
+  brand: string;
+  deviceId: string;
+  isActive: boolean | string;
+  regirstered?: string | undefined;
+  lastLogin?: string | undefined;
+  user?: User | undefined;
+  userId?: number | undefined;
+
+};
+
 export type Client = {
   id: number;
   name: string;
   email: string;
   managerEmail: string;
-  created_at?: string|undefined;
+  created_at?: string | undefined;
   address: string;
   address2: string;
   city: string;
   state?: string;
   zip?: string;
   balance?: number;
-  contactName:string
-  phone:string
-  fax:string,
-  termId:number,
-  notes:string
+  contactName: string
+  phone: string
+  fax: string,
+  termId: number,
+  notes: string
 };
 export type Invoice = {
   id: number;
@@ -47,7 +61,7 @@ export type Invoice = {
   fromDate: Date;
   toDate: Date;
   created_at: Date;
-  updated_at: Date; 
+  updated_at: Date;
   totalRegularHours: number;
   totalOverTimeHours: number;
   totalHolidayHours: number;
@@ -73,14 +87,14 @@ export type EmployeeSchedule = {
   locationShift: LocationShift;
 }
 export type LocationEmployeeSchedule = {
-  
-    items: EmployeeSchedule[];
-    totalHours: string;
-    overTimeHours: string;
-    holidayHours: string;
-    totalBreakHours: string;
-    invoiceAmount: number;
-    otherAmounts: number;
+
+  items: EmployeeSchedule[];
+  totalHours: string;
+  overTimeHours: string;
+  holidayHours: string;
+  totalBreakHours: string;
+  invoiceAmount: number;
+  otherAmounts: number;
 }
 
 export interface FormContextType {
@@ -114,14 +128,14 @@ export type Auth = {
   };
 };
 
-export type   BackendTokens= {
-    access_token: string;
-    refresh_token: string;
+export type BackendTokens = {
+  access_token: string;
+  refresh_token: string;
 
 };
 
-export type Link = {name: string, href: string, icon:  React.ForwardRefExoticComponent };
+export type Link = { name: string, href: string, icon: React.ForwardRefExoticComponent };
 
-export type Links =  Link[] ;
+export type Links = Link[];
 
 

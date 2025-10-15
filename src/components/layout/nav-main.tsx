@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/sidebar"
 import AdvanceSelectSimple from "@/components/shared/form/inputs/AdvanceSelectSimple"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useCallback, useEffect, useState } from "react"
+import { ForwardRefExoticComponent, useCallback, useEffect, useState } from "react"
 import { Client } from "@/types/types"
 import { useGetSingle } from "@/lib/api/queries/generic"
 import { PaginationApiType } from "@/types/table/PaginationTypes"
 import { debounce } from "@/lib/utils"
 import { pageTitles } from "@/lib/constants/URLS"
+import { IconProps } from "@radix-ui/react-icons/dist/types"
 
 export function NavMain({
     items,
@@ -25,7 +26,7 @@ export function NavMain({
     items: {
         title: string
         url: string
-        icon?: LucideIcon
+        icon?: LucideIcon | ForwardRefExoticComponent<IconProps & React.SVGAttributes<SVGElement>> | undefined
     }[],
     children?: React.ReactNode
 }) {
@@ -42,43 +43,43 @@ export function NavMain({
     // Get the title based on the current route
     const title = pageTitles[location.pathname] || 'Default Title';
 
-    const { data: clients, isFetched ,refetch} = useGetSingle<PaginationApiType<Client>>('/clients/paginate', {
-        limit: 1000,
-        page: 1,
-        search:  dropSearch,
-        clientId: selectedclientId ,
-        sortBy: "id",
-        sortOrder: "DESC",
-        fields: "id,name",
-    }, []);
+    // const { data: clients, isFetched ,refetch} = useGetSingle<PaginationApiType<Client>>('/clients/paginate', {
+    //     limit: 1000,
+    //     page: 1,
+    //     search:  dropSearch,
+    //     clientId: selectedclientId ,
+    //     sortBy: "id",
+    //     sortOrder: "DESC",
+    //     fields: "id,name",
+    // }, []);
 
-    const setSelectedLocationAndEmployeeId = (newLocation) => {
+    // const setSelectedLocationAndEmployeeId = (newLocation) => {
 
-        if (newLocation === null) {
-            queryParams.delete('clientId');
-        } else {
-            queryParams.set('clientId', newLocation);
-        }
+    //     if (newLocation === null) {
+    //         queryParams.delete('clientId');
+    //     } else {
+    //         queryParams.set('clientId', newLocation);
+    //     }
         
-        navigate({ search: queryParams.toString() });
-    };
+    //     navigate({ search: queryParams.toString() });
+    // };
 
 
-    const handleSearch = useCallback(
-        debounce((searchTerm: string) => {
-            setDropSearch(searchTerm);
-        }, 300),
-        []
-    );
+    // const handleSearch = useCallback(
+    //     debounce((searchTerm: string) => {
+    //         setDropSearch(searchTerm);
+    //     }, 300),
+    //     []
+    // );
 
-    useEffect(() => {
-        refetch()
-    }, [dropSearch])
+    // useEffect(() => {
+    //     refetch()
+    // }, [dropSearch])
 
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">
-                <SidebarMenu>
+                {/* <SidebarMenu>
                     <SidebarMenuItem className=" w-full">
                         <AdvanceSelectSimple className='dark:text-black mt-4' title="Client" name="locaiton"
                             disabled={false}
@@ -95,7 +96,7 @@ export function NavMain({
                             }}
                         />
                     </SidebarMenuItem>
-                </SidebarMenu>
+                </SidebarMenu> */}
                 <SidebarMenu>
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title} className={title==item.title?"font-bold bg-white rounded-lg shadow-md":""}>

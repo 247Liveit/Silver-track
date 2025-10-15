@@ -6,6 +6,7 @@ import {
   FilesIcon,
   GemIcon,
   LayoutDashboardIcon,
+  PhoneIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react"
@@ -24,7 +25,7 @@ import {
 import { NavMain } from "@/components/layout/nav-main"
 import { NavUser } from "./nav-user"
 import { useAuthHook } from "@/providers/authContext"
-import { INTIME_URL } from "@/lib/constants/Constants"
+import { MobileIcon } from "@radix-ui/react-icons"
 
 const data = {
   navMain: [
@@ -42,6 +43,11 @@ const data = {
       title: "Clients",
       url: "/dashboard/clients",
       icon: BarChartIcon,
+    },
+    {
+      title: "User Devices",
+      url: "/dashboard/user-devices",
+      icon: MobileIcon,
     },
    
   ],

@@ -13,6 +13,16 @@ export const createUserSchema = z.object({
     groupId: z.union([z.number(), z.string().min(1, { message: "Group is Required" })]).optional(),
     system: z.any(),
 });
+export const createUserDeviceSchema = z.object({
+    brand: z.string().min(1, { message: "Brand is required" }),
+    deviceId: z.string().min(1, { message: "Device ID is required" }).email(),
+    isActive: z.union([z.string().length(0), z.string().min(1, { message: "is Active is Required" })]).optional(),
+    userId: z.union([z.number(), z.string().min(1, { message: "User is Required" })]).optional(),
+
+});
+export const updateUserDeviceStatusSchema = z.object({
+    isActive: z.union([z.string().length(0), z.string().min(1, { message: "is Active is Required" }),z.coerce.boolean()]).optional(),
+});
 export const createIssueTypeSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     description: z.string().min(1, { message: "Description is required" }),

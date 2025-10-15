@@ -23,6 +23,7 @@ export enum Resource {
     Employees = "employees",
     EmployeeAvailabilities = "employee-availabilities",
     EmployeeShift = "employee-shifts",
+    UserDevice = "user-devices",
     EmployeeShift_SelfSchedule = EmployeeShift + "/self-schedule",
 }
 
@@ -57,16 +58,16 @@ export const rules: Rules = {
         [Action.Delete]: { can: "all", }, 
     },
     [Role.TRACKER_MANAGER]: {
-        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint] },
-        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint] },
-        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint] },
-        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint] },
-        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint] },
+        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
+        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
+        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
+        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
+        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
     },
     [Role.TRACKER_READER]: {
         [Action.Read]: { can: [ 
             Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.Locations,Resource.IssueTypes,
-            Resource.Checkpoint
+            Resource.Checkpoint,Resource.UserDevice
         ] },
     },
     [Role.TRACKER_CLIENT]: {
