@@ -1,7 +1,8 @@
 import { CustomInputProps } from "@/types/forms/InputPropsType";
 import React from "react";
 
-function CInputSimple({ title, name, type, icon, placeholder,value, error, ...res }: CustomInputProps, ref: any) {
+function CInputSimple({ title, name, type, icon, placeholder,value, error, ...rest }: CustomInputProps, ref: any) {
+    const {inputClassName, ...res} = rest;
     return (
         <div className={`mb-2 ${res.className}`}>
             <label htmlFor={name} className={`mb-2 block text-sm font-bold ${res.className}`}>
@@ -19,7 +20,7 @@ function CInputSimple({ title, name, type, icon, placeholder,value, error, ...re
                         placeholder={placeholder}
                         className={`peer block w-full ${res.disabled ? '' : 'cursor-pointer'} rounded-md border
                                     ${["time"].includes(type+"")?"":"py-2"} pl-10 text-sm outline-2 placeholder:text-gray-500
-                                    ${error ? 'border-red-300' : 'border-gray-200'} ${(res.disabled && !res.inputClassName) ? 'text-gray-400' : 'text-black'} p-1 ${res.inputClassName}`}
+                                    ${error ? 'border-red-300' : 'border-gray-200'} ${(res.disabled && !inputClassName) ? 'text-gray-400' : 'text-black'} p-1 ${inputClassName}`}
                     />
                 ) : (
                     <textarea

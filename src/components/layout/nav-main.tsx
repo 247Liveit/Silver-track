@@ -1,6 +1,6 @@
 "use client"
 
-import { type LucideIcon } from "lucide-react"
+import { ActivityIcon, ChevronRight, FileIcon, type LucideIcon } from "lucide-react"
 
 import {
     SidebarGroup,
@@ -8,16 +8,40 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
+    useSidebar,
 } from "@/components/ui/sidebar"
-import AdvanceSelectSimple from "@/components/shared/form/inputs/AdvanceSelectSimple"
-import { useLocation, useNavigate } from "react-router-dom"
-import { ForwardRefExoticComponent, useCallback, useEffect, useState } from "react"
+import { Link, LinkProps, useLocation, useNavigate } from "react-router-dom"
+import { ForwardRefExoticComponent, ReactNode, useState } from "react"
 import { Client } from "@/types/types"
-import { useGetSingle } from "@/lib/api/queries/generic"
-import { PaginationApiType } from "@/types/table/PaginationTypes"
-import { debounce } from "@/lib/utils"
 import { pageTitles } from "@/lib/constants/URLS"
 import { IconProps } from "@radix-ui/react-icons/dist/types"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Badge } from "../ui/badge"
+import { FileTextIcon } from "@radix-ui/react-icons"
+
+type BaseNavItem = {
+    title: string
+    badge?: string
+    icon?: React.ElementType
+}
+
+type NavLink = BaseNavItem & {
+    url: LinkProps['to'] | (string & {})
+    items?: never
+}
+
+type NavCollapsible = BaseNavItem & {
+    items: (BaseNavItem & { url: LinkProps['to'] | (string & {}) })[]
+    url?: never
+}
+
+type NavItem = NavCollapsible | NavLink
+
+
 
 export function NavMain({
     items,
@@ -39,7 +63,7 @@ export function NavMain({
     const selectedclientId = queryParams.get('clientId') || "";
 
 
-  
+
     // Get the title based on the current route
     const title = pageTitles[location.pathname] || 'Default Title';
 
@@ -60,7 +84,7 @@ export function NavMain({
     //     } else {
     //         queryParams.set('clientId', newLocation);
     //     }
-        
+
     //     navigate({ search: queryParams.toString() });
     // };
 
@@ -99,17 +123,89 @@ export function NavMain({
                 </SidebarMenu> */}
                 <SidebarMenu>
                     {items.map((item) => (
-                        <SidebarMenuItem key={item.title} className={title==item.title?"font-bold bg-white rounded-lg shadow-md":""}>
+                        <SidebarMenuItem key={item.title} className={title == item.title ? "font-bold bg-white rounded-lg shadow-md" : ""}>
                             <SidebarMenuButton tooltip={item.title} onClick={() => {
                                 navigate(item.url)
                             }}>
-                                {item.icon && <item.icon  />}
+                                {item.icon && <item.icon />}
                                 <span >{item.title}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
+
+                    <SidebarMenuItem>
+                        <SidebarMenuCollapsible href="/checkpoints-report" item={{
+                            title: "Reports",
+                            items: [
+                                { title: "Checkpoints Report", badge: undefined, icon: FileIcon, url: "/checkpoint-reports" },
+                                { title: "Daily Activity Report", badge: undefined, icon: ActivityIcon, url: "/daily-activity-reports" },
+                                { title: "Daily Report(Compact)", badge: undefined, icon: ActivityIcon, url: "/daily-activity-reports-compact" },
+                            ]
+                        }} />
+                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
     )
+}
+function SidebarMenuCollapsible({
+    item,
+    href,
+}: {
+    item: NavCollapsible
+    href: string
+}) {
+    const { setOpenMobile } = useSidebar()
+    return (
+        <Collapsible
+            asChild
+            defaultOpen={checkIsActive(href, item, true)}
+            className='group/collapsible'
+        >
+            <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip={item.title}>
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                        {item.badge && <NavBadge>{item.badge}</NavBadge>}
+                        <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180' />
+                    </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className='CollapsibleContent'>
+                    <SidebarMenuSub>
+                        {item.items.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                    asChild
+                                    isActive={checkIsActive(href, subItem)}
+                                >
+                                    <Link to={subItem.url} onClick={() => setOpenMobile(false)}>
+                                        {subItem.icon && <subItem.icon />}
+                                        <span>{subItem.title}</span>
+                                        {subItem.badge && <NavBadge>{subItem.badge}</NavBadge>}
+                                    </Link>
+                                </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                        ))}
+                    </SidebarMenuSub>
+                </CollapsibleContent>
+            </SidebarMenuItem>
+        </Collapsible>
+    )
+}
+
+
+function checkIsActive(href: string, item: NavItem, mainNav = false) {
+    return (
+        href === item.url ||
+        href.split('?')[0] === item.url ||
+        !!item?.items?.filter((i) => i.url === href).length || // if child nav is active
+        (mainNav &&
+            href.split('/')[1] !== '' &&
+            //@ts-ignore
+            href.split('/')[1] === item?.url?.split('/')[1])
+    )
+}
+function NavBadge({ children }: { children: ReactNode }) {
+    return <Badge className='rounded-full px-1 py-0 text-xs'>{children}</Badge>
 }

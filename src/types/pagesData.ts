@@ -238,6 +238,8 @@ export enum IssueLevels {
 
 }
 
+
+
 export type IssueType = {
     id: number;
     name: string;
@@ -250,6 +252,34 @@ export type IssueType = {
     displayInHandHeld: boolean;
     type: IssueTypes;
     level: IssueLevels;
+}
+
+export enum IssueStatus {
+    Open = "Open",
+    InProgress = "InProgress",
+    Closed = "Closed",
+    OnHold = "OnHold"
+}
+
+export type Issue = {
+    id: number;
+    details: string | null;
+    address: string;
+    status: IssueStatus;
+    closedDate: Date | null;
+    issueTypeId: number;
+    locationId: number;
+    clientId: number;
+    issueType?: IssueType;
+    location?: Location;
+    client?: Client;
+    geoLocation?: {lat:number, lng:number};
+    user?: User;
+    assigendTo?: User;
+    attachments?: {id: number, path: string,originalName:string, created_at: Date }[];
+    notes?: { id: number, text: string,created_at:Date }[];
+    created_at: Date;
+    updated_at: Date;
 }
 
 export type Checkpoint = {

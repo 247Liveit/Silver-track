@@ -1,17 +1,10 @@
 import TableActions from "@/components/TableActions";
 import TableHeader from "@/components/TableHeader";
-import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
-import { useCallback, useState } from "react";
-
+import { useState } from "react";
 import { Modal } from '@/components/ui/modal';
-import { ItemType } from "@/types/CommonPageProp";
 import useAxiosAuth from "@/lib/api/axios/hooks/useAxiosAuth";
-import { Button } from "@/components/ui/button";
 import { useModalHook } from "@/providers/modalContext";
-import { Client, User } from "@/types/types";
-import { onDelete } from "@/lib/api/axios/delete-item";
-import { clientSchema } from "@/lib/validation/zodSchema";
-import ClientsForm from "./forms/ClientForm";
+import { Client } from "@/types/types";
 import Pagination from "@/components/Pagination";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { useSearchParams } from "react-router-dom";

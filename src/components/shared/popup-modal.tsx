@@ -16,8 +16,9 @@ type TPopupModalProps = {
   userPopup?: boolean
   renderModal: (onClose: () => void) => React.ReactNode;
   extraBtns?: () => React.ReactNode;
+  url?: string
 };
-export default function PopupModal({ renderModal, modalName, showAddBtn = true, title, userPopup = false, extraBtns }: TPopupModalProps) {
+export default function PopupModal({ renderModal, modalName, showAddBtn = true, title, userPopup = false, extraBtns,url }: TPopupModalProps) {
   const { isOpen, setIsOpen } = useModalHook();
   const onClose = () => {
     setIsOpen("");
@@ -26,7 +27,8 @@ export default function PopupModal({ renderModal, modalName, showAddBtn = true, 
 
   const { isAllowed, getResourceByUrl } = useAccessControl();
 
-  const isAllowedCreate = isAllowed(Action.Create, getResourceByUrl('/invoices'))
+  const isAllowedCreate = isAllowed(Action.Create, getResourceByUrl(url??'/invoices'))
+  console.log("isAllowedCreate", isAllowedCreate);
   return (
     <div className="flex justify-end">
       <div className="flex gap-2">

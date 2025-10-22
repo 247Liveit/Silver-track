@@ -1,152 +1,126 @@
-import { BuildingIcon, GemIcon, NotebookIcon } from "lucide-react"
 
 import { useGetSingle } from "@/lib/api/queries/generic"
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Location } from "@/types/pagesData";
-import { SkeletonBig } from "@/components/ui/skeleton";
-import LocationCard from "./components/locationCard";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Client } from "@/types/types";
-import { Modal } from "@/components/ui/modal";
-import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
-import { clientSchema } from "@/lib/validation/zodSchema";
-import ClientsForm from "../clients/components/forms/ClientForm";
-import { Button } from "@/components/ui/button";
-import { dateFromat } from "@/lib/utils";
+import { useCallback, useState } from "react";
+import { Issue, IssueLevels, IssueTypes } from "@/types/pagesData";
+import { debounce } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { PaginationApiType } from "@/types/table/PaginationTypes";
+import IssuesTable from "./components/IssuesTable";
+import AdvanceSelectSimple from "@/components/shared/form/inputs/AdvanceSelectSimple";
+import CustomInputSimple from "@/components/shared/form/inputs/CustomInputSimple";
 
 export default function DashboardPage() {
-  const [searchParams] = useSearchParams();
-  const clientId = searchParams.get('clientId');
-  const error = searchParams.get('error');
-  const { data, isLoading, refetch } = useGetSingle<{ locations: Location[], client: Client }>(`/clients/location/${clientId}?withInactive=1`);
-  const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
-  
-  useEffect(() => {
-    refetch();
-  }, [clientId])
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page') || 1);
+  const pageLimit = Number(searchParams.get('limit') || 25);
+  const search = searchParams.get('search') || '';
+  const [selectedFilters, setSelectedFilter] = useState<any>({ level: "All", type: "All", date: "All" });
 
-  
+  // const handleSearch = useCallback(
+  //   debounce((searchTerm: string) => {
+  //     const newSearchParams = new URLSearchParams(searchParams);
+  //     if (searchTerm) {
+  //       newSearchParams.set('search', searchTerm);
+  //       newSearchParams.delete('page');
+  //       newSearchParams.delete('limit');
+  //     } else {
+  //       newSearchParams.delete('search');
+  //     }
+  //     setSearchParams(newSearchParams);
 
-  if (isLoading && clientId) {
-    return (
-      <SkeletonBig />
-    )
-  }
+  //   }, 300),
+  //   [searchParams, setSearchParams]
+  // );
+  const { data, isLoading, refetch } = useGetSingle<PaginationApiType<Issue>>(`/issues`, {
+    limit: pageLimit, page: page, search: search, level: selectedFilters.level, type: selectedFilters.type, date: selectedFilters.date
+  });
+
+  const Leveloptions = Object.keys(IssueLevels)
+    .map(key => ({
+      label: key, // Use the enum key as the label
+      value: IssueLevels[key as keyof typeof IssueLevels] // Use the enum value
+    }));
+  const typeOptions = Object.keys(IssueTypes)
+    .map(key => ({
+      label: key, // Use the enum key as the label
+      value: IssueTypes[key as keyof typeof IssueTypes] // Use the enum value
+    }));
+
+  console.log("Selected Filters:", selectedFilters);
   return (
-    <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-      {clientId ?
-        <>
-          <div className="flex justify-between">
-            <h5 className="font-bold flex gap-2"><GemIcon /> Client Info </h5>
-            <Button className="w-full lg:w-32" onClick={() => { setIsOpen(true) }} >Edit Client</Button>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-            <Card className="@container/card rounded-lg grid grid-cols-1  gap-2">
-              <CardHeader>
-                <CardDescription>Open Balance </CardDescription>
-                <CardTitle className="text-2xl font-normal tabular-nums @[250px]/card:text-3xl">
-                  ${Number(data?.client?.balance || 0).toFixed(2) + ""}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-            <Card className="@container/card rounded-lg grid grid-cols-1 gap-2">
-              <CardHeader>
-                <CardDescription>Tracking Address </CardDescription>
-                <CardTitle className="text-xl font-normal tabular-nums @[250px]/card:text-3xl">
-                  Address: {data?.client.address + ""}<br />
-                  State: {data?.client.state + ""}
-                </CardTitle>
-              </CardHeader>
-            </Card>
-            <Card className="@container/card rounded-lg grid grid-cols-1  gap-2">
-              <CardHeader>
-                <CardDescription>Contacts </CardDescription>
-                <CardTitle className="text-xl font-normal tabular-nums @[250px]/card:text-3xl">
-                  Email:
-                  <a
-                    href={`mailto:${data?.client.email}`}
-                    className="text-blue-500 hover:underline pl-2"
-                  >
-                    {data?.client.email}
-                  </a>
-                  <br />
+    <section className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+      {isLoading ? "Please wait..." :
+        <div className="col-span-1  p-4 bg-white border rounded-lg shadow-sm">
+          <h1 className="text-center font-bold">ISSUE MONITOR</h1>
+          <div className="grid grid-cols-4 gap-4 mt-4">
+            <AdvanceSelectSimple
+              className='dark:text-black mt-4'
+              title="Level"
+              name="level"
+              disabled={false}
+              value={selectedFilters ? selectedFilters.level : ""}
+              options={Leveloptions} // Use the mapped options here
+              selected={selectedFilters ? selectedFilters.level : ""}
+              placeholder='Please Select'
+              // onTypeing={handleSearch}
+              icon={<></>}
+              error={""}
+              type='single'
+              onChange={e => {
+                // setSelectedLocationAndEmployeeId(e.target.value);
+                // const location = clients ? clients.items.find(d => d.id == +e.target.value) : null;
+                console.log("Selected Level:", e.target.value);
+                setSelectedFilter((prev) => { return { ...prev, level: e.target.value } });
+              }}
+            />
+            <AdvanceSelectSimple
+              className='dark:text-black mt-4'
+              title="Type"
+              name="type"
+              disabled={false}
+              value={selectedFilters ? selectedFilters.type : ""}
+              options={typeOptions} // Use the mapped options here
+              selected={selectedFilters ? selectedFilters.type : ""}
+              placeholder='Please Select'
+              // onTypeing={handleSearch}
+              icon={<></>}
+              error={""}
+              type='single'
+              onChange={e => {
+                // setSelectedLocationAndEmployeeId(e.target.value);
+                // const location = clients ? clients.items.find(d => d.id == +e.target.value) : null;
+                console.log("Selected Type:", e.target);
 
-                  {/* Phone */}
-                  Phone:
-                  <a
-                    href={`tel:${data?.client.phone}`}
-                    className="text-blue-500 hover:underline pl-2"
-                  >
-                    {data?.client.phone}
-                  </a>
-                </CardTitle>
-              </CardHeader>
-            </Card>
-          </div>
-          {clientId &&
-          <>
-            <h5 className="font-bold flex gap-2"><NotebookIcon /> Notes </h5>
-            <Card className="@container/card rounded-lg grid grid-cols-1  gap-2">
-              <CardHeader>
-                <CardContent>
-                  {data?.client.notes}
-                </CardContent>
-              </CardHeader>
-            </Card>
-            </>
-          }
-          <h5 className="font-bold flex gap-2 mt-4"><BuildingIcon /> Client Locations </h5>
+                setSelectedFilter((prev) => { return { ...prev, type: e.target.value } });
+              }}
+            />
+            <div className={`mb-2`}>
+              <label className={`mb-2 block text-sm font-bold `}>
+                Date
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  value={selectedFilters.date}
+                  className={`peer block w-full rounded-md border p-[0.4rem]
+                                     pl-10 text-sm outline-2 placeholder:text-gray-500
+                                    `}
 
-          {data?.locations.length === 0 ?
-            <div className="mt-8 text-center text-muted-foreground">
-              No locations found
+                  onChange={e => {
+                    // setSelectedLocationAndEmployeeId(e.target.value);
+                    // const location = clients ? clients.items.find(d => d.id == +e.target.value) : null;
+                    console.log("Selected Date:", e.target.value);
+
+                    setSelectedFilter((prev) => { return { ...prev, date: e.target.value } });
+                  }}
+                />
+              </div>
             </div>
-            :
-            data?.locations?.map((item: Location) => (
-              <LocationCard key={item.id} location={item} />
-            ))}
-        </>
-        :
-        <><h5 className="text-center font-bold text-orange-5 00">Select a Client to view the locations</h5></>
+          </div>
+          <IssuesTable items={data} setItems={refetch} />
+        </div>
       }
-      {error&&
-              <>
-              <h5 className="text-center font-normal text-red-500">{error} , Please logout and login again</h5>
-              </>
-}
-
-      <div className="flex gap-3 mb-4">
-        <Modal
-          key={"edit"}
-          isOpen={isOpen}
-          onClose={() => { setIsOpen(false) }}
-          className={'!bg-background !px-1'}
-        >
-          <h5 className='text-2xl font-bold px-4'>{"Update Client"}</h5>
-
-          <CustomFormLayout key={"formEditView"} item={data?.client} url='/clients'
-            redirectUrl='' edit={true} showNewBtn={false}
-            validationSchema={clientSchema}
-            onSave={(clients: Client) => {
-              refetch();
-              setIsOpen(false)
-            }}>
-            <ClientsForm />
-          </CustomFormLayout>
-
-
-        </Modal>
-
-      </div>
-    </div>
+    </section>
   )
 }

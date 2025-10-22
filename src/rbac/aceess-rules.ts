@@ -58,16 +58,16 @@ export const rules: Rules = {
         [Action.Delete]: { can: "all", }, 
     },
     [Role.TRACKER_MANAGER]: {
-        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
-        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
-        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
-        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
-        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice] },
+        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
+        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
+        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
+        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
+        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
     },
     [Role.TRACKER_READER]: {
         [Action.Read]: { can: [ 
             Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.Locations,Resource.IssueTypes,
-            Resource.Checkpoint,Resource.UserDevice
+            Resource.Checkpoint,Resource.UserDevice,Resource.Shared
         ] },
     },
     [Role.TRACKER_CLIENT]: {

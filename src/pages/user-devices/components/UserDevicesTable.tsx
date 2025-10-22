@@ -60,7 +60,7 @@ export default function UserDevicesTable({ items, setItems }: { items: UserDevic
                                         {item.id}
                                     </h5>
                                 </td>
-                                <td className="border-b border-[#eee] py-2 px-2   text-center">
+                                <td className="border-b border-[#eee] py-2 px-2   text-center">   
                                     <h5 className=" text-black">
                                         {item.brand}
                                     </h5>
