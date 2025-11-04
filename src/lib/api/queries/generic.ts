@@ -24,9 +24,8 @@ const  useGet = <T>(key: string,params?:any|undefined,url?:string|undefined): Us
 
 const useGetSingle = <T>(key: string,params?:any|undefined,defaule?:any,url?:string): UseQueryResult<T> => {
     const axios = useAxiosAuth();
-
     return useQuery<T>({
-        queryKey: [key,params||key,url||key],
+        queryKey: [key,params||key,url||key,JSON.stringify(params)],
         queryFn: async () => {
             const reqUrl=url||key
             if(!reqUrl.includes('undefined')&&!reqUrl.includes('null')){

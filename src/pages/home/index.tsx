@@ -2,7 +2,7 @@
 import { useGetSingle } from "@/lib/api/queries/generic"
 import { useSearchParams } from "react-router-dom";
 import { useCallback, useState } from "react";
-import { Issue, IssueLevels, IssueTypes } from "@/types/pagesData";
+import { Issue, IssueLevels, IssueTypes, LeveloptionsArray, typeOptions } from "@/types/pagesData";
 import { debounce } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
@@ -36,16 +36,8 @@ export default function DashboardPage() {
     limit: pageLimit, page: page, search: search, level: selectedFilters.level, type: selectedFilters.type, date: selectedFilters.date
   });
 
-  const Leveloptions = Object.keys(IssueLevels)
-    .map(key => ({
-      label: key, // Use the enum key as the label
-      value: IssueLevels[key as keyof typeof IssueLevels] // Use the enum value
-    }));
-  const typeOptions = Object.keys(IssueTypes)
-    .map(key => ({
-      label: key, // Use the enum key as the label
-      value: IssueTypes[key as keyof typeof IssueTypes] // Use the enum value
-    }));
+
+
 
   console.log("Selected Filters:", selectedFilters);
   return (
@@ -60,7 +52,7 @@ export default function DashboardPage() {
               name="level"
               disabled={false}
               value={selectedFilters ? selectedFilters.level : ""}
-              options={Leveloptions} // Use the mapped options here
+              options={LeveloptionsArray} // Use the mapped options here
               selected={selectedFilters ? selectedFilters.level : ""}
               placeholder='Please Select'
               // onTypeing={handleSearch}

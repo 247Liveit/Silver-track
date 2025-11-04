@@ -19,14 +19,13 @@ import { Client } from "@/types/types"
 import { pageTitles } from "@/lib/constants/URLS"
 import { IconProps } from "@radix-ui/react-icons/dist/types"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Badge } from "../ui/badge"
-import { FileTextIcon } from "@radix-ui/react-icons"
 
 type BaseNavItem = {
     title: string
     badge?: string
-    icon?: React.ElementType
+    icon?: React.ElementType,
+    isActive?: boolean
 }
 
 type NavLink = BaseNavItem & {
@@ -134,12 +133,12 @@ export function NavMain({
                     ))}
 
                     <SidebarMenuItem>
-                        <SidebarMenuCollapsible href="/checkpoints-report" item={{
+                        <SidebarMenuCollapsible href="/dashboard/checkpoint-reports" item={{
                             title: "Reports",
                             items: [
-                                { title: "Checkpoints Report", badge: undefined, icon: FileIcon, url: "/checkpoint-reports" },
-                                { title: "Daily Activity Report", badge: undefined, icon: ActivityIcon, url: "/daily-activity-reports" },
-                                { title: "Daily Report(Compact)", badge: undefined, icon: ActivityIcon, url: "/daily-activity-reports-compact" },
+                                { title: "Checkpoint Reports", badge: undefined, icon: FileIcon, url: "/dashboard/checkpoint-reports",isActive:title=="Checkpoint Reports" },
+                                { title: "Daily Activity Report", badge: undefined, icon: ActivityIcon, url: "/dashboard/daily-activities-reports" },
+                                { title: "Daily Report(Compact)", badge: undefined, icon: ActivityIcon, url: "/dashboard/daily-activity-reports-compact" },
                             ]
                         }} />
                     </SidebarMenuItem>
@@ -150,16 +149,15 @@ export function NavMain({
 }
 function SidebarMenuCollapsible({
     item,
-    href,
+    href
 }: {
     item: NavCollapsible
-    href: string
+    href: string,
 }) {
     const { setOpenMobile } = useSidebar()
     return (
         <Collapsible
             asChild
-            defaultOpen={checkIsActive(href, item, true)}
             className='group/collapsible'
         >
             <SidebarMenuItem>
@@ -177,7 +175,7 @@ function SidebarMenuCollapsible({
                             <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton
                                     asChild
-                                    isActive={checkIsActive(href, subItem)}
+                                    isActive={subItem.isActive}
                                 >
                                     <Link to={subItem.url} onClick={() => setOpenMobile(false)}>
                                         {subItem.icon && <subItem.icon />}

@@ -1,141 +1,188 @@
-import * as React from "react"
-import { Check, ChevronsUpDown, Command } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { FormField, FormItem } from "@/components/ui/form";
-import { cn, createChangeEvent } from "@/lib/utils";
+import * as React from "react";
+import { useContext } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { FormContext } from "@/providers/formContext";
 import { CustomSelectProps, SelectOption } from "@/types/forms/SelectPropsType";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
-function aSelect({ title, name, type, icon, placeholder, error, selected, options, onChange, className, ...res }: CustomSelectProps, ref: any) {
-    const form = React.useContext(FormContext);
+function AdvanceSelect(
+  {
+    title,
+    name,
+    icon,
+    placeholder,
+    error, // not used directly; RHF's FormMessage will handle messages
+    selected, // will be ignored in favor of RHF's field.value, but kept for API compat
+    options = [],
+    onTypeing, // keeping your spelling to match current codebase
+    otherOption,
+    onChange, // optional external onChange; we'll call it after field.onChange
+    className,
+    hidden,
+    disabled,
+    ...res
+  }: CustomSelectProps,
+  ref: any
+) {
+  const form = useContext(FormContext);
+  const [open, setOpen] = React.useState(false);
+  const [items, setItems] = React.useState<SelectOption[]>(options);
 
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
-    //@ts-ignore
-    const [valueLabel, setValueLabel] = React.useState("")
+  React.useEffect(() => {
+    setItems(options || []);
+  }, [options]);
 
-    const [items, setItems] = React.useState<SelectOption[]>(options || []);
+  // Helper: get the label shown in the button from the current field value
+  const getLabelForValue = (val: unknown) => {
+    const found = items.find((i) => String(i.value) === String(val));
+    if (found) return found.label;
+    if (otherOption && String(val) === "0") return otherOption;
+    return "";
+  };
 
-    const generateValue = (item: SelectOption) => {
-        return item.value + item.label
-    }
+  if(name=="location")
+  console.log(items);
 
+  return (
+    <FormField
+      control={form?.control}
+      name={name}
+      render={({ field }) => {
+        // Normalize the field.value to string (RHF often handles strings)
+        const fieldValue = field.value ?? (selected ?? ""); // allow initial selected to seed if RHF has no value yet
+        const selectedLabel = getLabelForValue(fieldValue);
 
+        return !hidden ? (
+          <FormItem className={cn("mb-2", className)}>
+            {title ? (
+              <FormLabel className="font-bold flex items-center gap-2">
+                {icon ? icon : null}
+                {title}
+              </FormLabel>
+            ) : null}
 
-    React.useEffect(() => {
-        if (Array.isArray(options) && options.length > 0) {
-            setItems([...options]);
-        }
-    }, [options]);
+            <FormControl>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    ref={ref}
+                    type="button"
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className={cn(
+                      "w-full justify-between truncate overflow-hidden text-ellipsis",
+                      disabled && "opacity-60 cursor-not-allowed"
+                    )}
+                    disabled={disabled}
+                  >
+                    <span className="truncate w-full text-left">
+                      {selectedLabel || placeholder || "Select..."}
+                    </span>
+                    <ChevronsUpDown className="opacity-50 flex-shrink-0" />
+                  </Button>
+                </PopoverTrigger>
 
-    const selectedValue = typeof form?.watch == "function" ? form?.watch(name) : selected
-
-    React.useEffect(() => {
-
-        // if (form.getValues && (form?.getValues(name) || form?.getValues(name) == "0")) {
-        const selectedItem = items.filter(item => { return (item.value == String(selectedValue)) })
-        if (selectedItem.length > 0) {
-            setValue(generateValue(selectedItem[0]))
-            setValueLabel(selectedItem[0].label)
-        }
-        // }
-        // else {
-        //     setValue("")
-        //     setValueLabel("")
-        // }
-    }, [items, selectedValue]);
-    const formMethods = useForm();
-    console.log("from",form)
-    return (
-        <FormField
-            control={form?.control ?? formMethods.control}
-            name={name}
-            render={({ field }) => (
-                <FormItem className={`mb-2 ${className}`}>
-                    <div className="mb-4">
-                        <label htmlFor={name} className="mb-2 block text-md  font-bold">
-                            {title}
-                        </label>
-                        <div className="relative">
-                            <Popover open={open} onOpenChange={setOpen}  >
-                                <PopoverTrigger asChild >
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={open}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            (!field.value && field.value != "0") && "text-muted-foreground"
-                                        )}>
-                                        <span className="truncate w-full text-left text-black font-md">
-                                            {value
-                                                ? items.find((item) => generateValue(item) === value)?.label
-                                                : placeholder}
-                                        </span>
-                                        <ChevronsUpDown className="opacity-50 flex-shrink-0" />
-                                    </Button>
-                                </PopoverTrigger>
-
-                                {!res.disabled &&
-                                    <PopoverContent className="w-full p-0">
-                                        <Command >
-                                            <CommandInput placeholder={placeholder} className="h-9" />
-                                            <CommandList >
-                                                <CommandEmpty>No item found.</CommandEmpty>
-                                                <CommandGroup>
-                                                    {items.map((option) => (
-                                                        <CommandItem
-                                                            key={option.value}
-                                                            className={value === generateValue(option) ? "opacity-100 font-bold" : "opacity-90"}
-                                                            value={generateValue(option)}
-                                                            onSelect={(currentValue) => {
-
-                                                                const newValue = currentValue === value ? "" : currentValue
-                                                                setValue(newValue)
-                                                                if (newValue != "") {
-                                                                    setValueLabel(option.label)
-                                                                }
-                                                                else {
-                                                                    setValueLabel("")
-                                                                }
-                                                                setOpen(false)
-                                                                if (onChange)
-                                                                    onChange(createChangeEvent(name, (newValue != "" ? String(option.value) : "")))
-                                                                field.onChange(createChangeEvent(name, (newValue != "" ? String(option.value) : "")))
-
-
-                                                            }}
-                                                        >
-                                                            {option.label}
-                                                            <Check
-                                                                className={cn(
-                                                                    "ml-auto",
-                                                                    value === generateValue(option) ? "opacity-100" : "opacity-0"
-                                                                )}
-                                                            />
-                                                        </CommandItem>
-                                                    ))}
-                                                </CommandGroup>
-                                            </CommandList>
-                                        </Command>
-                                    </PopoverContent>}
-                                {error && (
-                                    <p className="text-xs italic text-red-500 mt-2">
-                                        {error as string}
-                                    </p>
+                {!disabled && (
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput
+                        placeholder={placeholder}
+                        className="h-9"
+                        onValueChange={onTypeing}
+                      />
+                      <CommandList>
+                        <CommandEmpty>No item found.</CommandEmpty>
+                        <CommandGroup>
+                          {otherOption && (
+                            <CommandItem
+                              key="__other__"
+                              // `value` here is purely for Command’s typeahead/filtering
+                              value={`0 ${otherOption}`}
+                              onSelect={() => {
+                                // Update RHF
+                                field.onChange("0");
+                                // Call external onChange if provided
+                                onChange?.({
+                                  target: { name, value: "0" },
+                                } as unknown as React.ChangeEvent<HTMLInputElement>);
+                                setOpen(false);
+                              }}
+                            >
+                              {otherOption}
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  String(fieldValue) === "0"
+                                    ? "opacity-100"
+                                    : "opacity-0"
                                 )}
-                            </Popover>
-                        </div>
-                    </div>
-                </FormItem>
-            )}
-        />
+                              />
+                            </CommandItem>
+                          )}
 
-    )
+                          {items.map((opt) => (
+                            <CommandItem
+                              key={String(opt.value)}
+                              value={`${opt.value} ${opt.label}`}
+                              onSelect={() => {
+                                const newVal = String(opt.value);
+                                // Toggle-off behavior (optional): if same value, clear. Comment out if undesired.
+                                const finalVal =
+                                  String(fieldValue) === newVal ? "" : newVal;
+
+                                field.onChange(finalVal);
+                                onChange?.({
+                                  target: { name, value: finalVal },
+                                } as unknown as React.ChangeEvent<HTMLInputElement>);
+                                setOpen(false);
+                              }}
+                            >
+                              {opt.label}
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  String(fieldValue) === String(opt.value)
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                )}
+              </Popover>
+            </FormControl>
+
+            <FormMessage className="h-auto min-h-2" />
+          </FormItem>
+        ) : (
+          <></>
+        );
+      }}
+    />
+  );
 }
 
-const AdvanceSelect = React.forwardRef(aSelect);
-export default AdvanceSelect;
+const AdvanceSelectSimple = React.forwardRef(AdvanceSelect);
+export default AdvanceSelectSimple;

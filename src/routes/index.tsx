@@ -11,6 +11,8 @@ const NotFound = lazy(() => import('@/pages/not-found'));
 const UsersPage = lazy(() => import('@/pages/users'));
 const UserGroupsPage = lazy(() => import('@/pages/user-groups'));
 const UserDevicePage = lazy(() => import('@/pages/user-devices'));
+const CheckpointReportsPage = lazy(() => import('@/pages/reports/checkpoint-reports'));
+const DailyActivitiesReportPage = lazy(() => import('@/pages/reports/daily-activity-reports'));
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +63,14 @@ export default function AppRouter() {
             {
               path: 'user-devices',
               element: <UserDevicePage />
+            },
+            {
+              path: 'checkpoint-reports',
+              element: <CheckpointReportsPage />
+            },
+            {
+              path: 'daily-activities-reports',
+              element: <DailyActivitiesReportPage />
             },
           ]
         }

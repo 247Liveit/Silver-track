@@ -237,8 +237,16 @@ export enum IssueLevels {
     Level3 = "Level3",
 
 }
-
-
+ export  const LeveloptionsArray = Object.keys(IssueLevels)
+    .map(key => ({
+      label: key, // Use the enum key as the label
+      value: IssueLevels[key as keyof typeof IssueLevels] // Use the enum value
+    }));
+export  const typeOptions = Object.keys(IssueTypes)
+    .map(key => ({
+      label: key, // Use the enum key as the label
+      value: IssueTypes[key as keyof typeof IssueTypes] // Use the enum value
+    }));
 
 export type IssueType = {
     id: number;

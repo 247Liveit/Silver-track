@@ -1,4 +1,4 @@
-import CustomInput from "@/components/shared/form/inputs/CustomInput";
+ import CustomInput from "@/components/shared/form/inputs/CustomInput";
 import InlineCheckBox from "@/components/shared/form/inputs/InlineCheckBox";
 import InlineRadioButton from "@/components/shared/form/inputs/InlineRadioButton";
 import { FormContext } from "@/providers/formContext";
