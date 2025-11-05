@@ -14,12 +14,20 @@ export function CheckPointForm({ locationId }: { locationId: number }) {
     const allowKeepOpen = form.watch('allowKeepOpen');
     const requiredPhoto = form.watch('requiredPhoto');
     const reportIfMissing = form.watch('reportIfMissing');
+ 
+
 
     const { data, isFetched } = useGet<IssueType>('/issue-types/names');
 
     useEffect(() => {
         form.setValue('locationId', locationId);
     }, [form.itemState?.locationId])
+
+    //   useEffect(() => {
+        
+    //         form.setValue('issue_type_id', 0);
+        
+    // }, []);
 
     return (
 
@@ -55,17 +63,20 @@ export function CheckPointForm({ locationId }: { locationId: number }) {
                 <img src={"/qrcode.png"} alt="QR Code" className="h-24 w-24 object-contain text-center" />
 
             </div>
-            <div className="col-span-2 grid lg:grid-cols-3 grid-cols-1 gap-4">
-                {isFetched &&
-                    <CustomSelect
-                        className='dark:text-black col-span-2' title=" Issue Type" name="issue_type_id"
-                        otherOption={true}
-                        options={(data ?? []).map(item => ({ label: item.name, value: item.id }))}
-                        selected={undefined}
-                        placeholder='Select Issue ...' icon={<></>}
-                        type='single' />
-                }
-                {((!issueTypeId || issueTypeId === "0") &&  !form?.itemState?.id)&&
+                <div className="col-span-2 grid lg:grid-cols-3 grid-cols-1 gap-4">
+                <CustomSelect
+                    className='dark:text-black col-span-2' 
+                    title="Issue Type" 
+                    name="issue_type_id"
+                    otherOption={true}
+                    options={isFetched ? (data ?? []).map(item => ({ label: item.name, value: item.id })) : []}
+                    selected={undefined}
+                    placeholder='Select Issue ...' 
+                    icon={<></>}
+                    type='single'
+                    
+                />
+                {((!issueTypeId || issueTypeId === "0") && !form?.itemState?.id) &&
                     <InlineCheckBox
                         placeholder=""
                         className="mt-6"

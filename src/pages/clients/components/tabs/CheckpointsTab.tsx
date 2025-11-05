@@ -11,8 +11,9 @@ import CheckpointsTable from "../CheckpointTable";
 import { Checkpoint, Location } from "@/types/pagesData";
 import { createCheckPointTypeSchema } from "@/lib/validation/zodSchema";
 import { CheckPointForm } from "../forms/CheckpointForm";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function CheckpointTab({ location }: { location: Location | null }) {
+export default function CheckpointTab({ location,  onCheckpointCreated  }: { location: Location | null ,onCheckpointCreated?: () => void }) {
   if (!location) return "No Location ! "
   const [isOpen, setIsOpen] = useState<string>("");
   const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
@@ -23,6 +24,20 @@ export default function CheckpointTab({ location }: { location: Location | null 
   const { data, isLoading, refetch } = useGet<Checkpoint>('checkpoints', {
     locationId: location.id
   });
+    const queryClient= useQueryClient()
+
+const handleCheckpointSaved = () => {
+    console.log("Checkpoint saved, triggering issue refetch");
+    refetch();
+    setIsOpen("");
+    queryClient.invalidateQueries({queryKey:['issue-types']})
+    setCurrentCheckPoint({});
+
+  };
+
+  const handleCheckpointDeleted = () => {
+    console.log("Checkpoint deleted, triggering issue refetch");
+  };
 
 
   return (
@@ -44,7 +59,7 @@ export default function CheckpointTab({ location }: { location: Location | null 
       >
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
         <CustomFormLayout url="/checkpoints" validationSchema={createCheckPointTypeSchema} showNewBtn={false}
-        item={currentCheckPoint} redirectUrl="" onSave={() => { refetch(); setIsOpen(""); setCurrentCheckPoint({}) }} >
+        item={currentCheckPoint} redirectUrl=""  onSave={handleCheckpointSaved} >
           <CheckPointForm locationId={location.id} />
         </CustomFormLayout>
       </Modal>
@@ -63,7 +78,7 @@ export default function CheckpointTab({ location }: { location: Location | null 
                 className="flext-1 bg-red-500 disabled:bg-gray-500"
                 onClick={() => {
                   onDelete(`/checkpoints/${(currentCheckPoint as Checkpoint)?.id}`, currentCheckPoint, axios, toast, refetch);
-                  setIsOpen(""); setCurrentCheckPoint({});
+                  setIsOpen(""); setCurrentCheckPoint({});  handleCheckpointDeleted();
                 }}>
                 Yes
               </Button>
