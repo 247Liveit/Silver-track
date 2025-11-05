@@ -26,6 +26,7 @@ export default function UsersPage() {
             <div className="gap-3 mb-4">
               <PopupModal
                 title='Add user'
+                url="/users"
                 extraBtns={() => {
                   return (
                     <Button className="flex justify-end ml-auto  text-xs md:text-sm "
