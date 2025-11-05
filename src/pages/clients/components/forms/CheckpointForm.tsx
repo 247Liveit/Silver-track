@@ -23,11 +23,7 @@ export function CheckPointForm({ locationId }: { locationId: number }) {
         form.setValue('locationId', locationId);
     }, [form.itemState?.locationId])
 
-    //   useEffect(() => {
-        
-    //         form.setValue('issue_type_id', 0);
-        
-    // }, []);
+    
 
     return (
 
