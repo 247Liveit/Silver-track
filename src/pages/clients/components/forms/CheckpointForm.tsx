@@ -10,25 +10,24 @@ import { Location } from "@/types/pagesData";
 import { Client } from "@/types/types";
 
 
-export function CheckPointForm({ locationId, clientId }: { locationId: number, clientId: number }) {
+export function CheckPointForm({ locationId}: { locationId: number }) {
     const form = useContext(FormContext);
     const isActive = form.watch('isActive');
     const issueTypeId = form.watch('issue_type_id');
     const allowKeepOpen = form.watch('allowKeepOpen');
     const requiredPhoto = form.watch('requiredPhoto');
     const reportIfMissing = form.watch('reportIfMissing');
-
+     
 
 
     const { data, isFetched } = useGet<IssueType>('/issue-types/names');
-    const { data: locationsData, isFetched: isLocationsFetched } = useGet<{ locations: Location[], client: Client }>(`/clients/location/${clientId}`);
+   
 
-    console.log('fetched location for form', locationsData)
     useEffect(() => {
         form.setValue('locationId', locationId);
     }, [form.itemState?.locationId])
 
-
+ 
 
     return (
 
@@ -42,31 +41,17 @@ export function CheckPointForm({ locationId, clientId }: { locationId: number, c
                 disabled={false}
             />
 
-            {/* <CustomInput
+            <CustomInput
                 type="text"
                 className='dark:text-black col-span-2 '
                 title="Location"
                 name="address"
                 placeholder='Enter Location'
-                
                 icon={<></>}
-                disabled={false}
-            /> */}
-
-            <CustomSelect
-                className='dark:text-black col-span-2'
-                title="Location"
-                name="address"
-                options={isLocationsFetched && locationsData ? (locationsData as any as { locations: Location[], client: Client }).locations.map(item => ({
-                    label: item.name,
-                    value: item.id.toString()
-                })) : []}
-                selected={locationId?.toString()}
-                placeholder='Enter Location'
-                icon={<></>}
-                type='single'
                 disabled={false}
             />
+
+            
 
             <div className="col-span-2 grid grid-cols-3 gap-4">
                 <CustomInput

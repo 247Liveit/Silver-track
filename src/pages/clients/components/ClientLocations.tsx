@@ -4,7 +4,7 @@ import { useGetSingle } from "@/lib/api/queries/generic";
 import LocationCard from "@/pages/home/components/locationCard";
 import { Location } from "@/types/pagesData";
 import { Client } from "@/types/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LocationInfoTab from "./tabs/LocationInfoTab";
 import IssueTypesTab from "./tabs/IssueTypesTab";
 import CheckpointTab from "./tabs/CheckpointsTab";
@@ -14,11 +14,12 @@ export default function ClientLocations({ client, className }: { client: Client 
     if (!client) return (<>No Client Selected</>)
 
     const { data, isLoading } = useGetSingle<{ locations: Location[], client: Client }>(`/clients/location/${client.id}?withInactive=1`);
-    const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+const activeLocation = selectedLocation || data?.locations?.[0] || null;
     console.log("rerender")
 
-
-    return (
+     return (
         <section className={`grid grid-cols-12 m-4 ${className}`}>
 
             {!isLoading ? <>
@@ -28,8 +29,8 @@ export default function ClientLocations({ client, className }: { client: Client 
                             <li key={item.id}>
                                 <Button
                                     onClick={() => setSelectedLocation(item)}
-                                    variant={selectedLocation?.id === item.id ? "default" : "outline"}
-                                    className={`m-1 w-[90%] ${selectedLocation?.id === item.id
+                                    variant={activeLocation?.id === item.id ? "default" : "outline"}
+                                    className={`m-1 w-[90%] ${activeLocation?.id === item.id
                                             ? 'bg-primary text-primary-foreground'
                                             : 'hover:bg-accent'
                                         }`}

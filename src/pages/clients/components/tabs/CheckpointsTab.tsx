@@ -61,7 +61,7 @@ const handleCheckpointSaved = () => {
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
         <CustomFormLayout url="/checkpoints" validationSchema={createCheckPointTypeSchema} showNewBtn={false}
         item={currentCheckPoint} redirectUrl=""  onSave={handleCheckpointSaved} >
-          <CheckPointForm locationId={location.id}  clientId={location.client?.id || location.clientId} />
+          <CheckPointForm locationId={location.id}  />
         </CustomFormLayout>
       </Modal>
       <div className="flex gap-3 mb-4">
