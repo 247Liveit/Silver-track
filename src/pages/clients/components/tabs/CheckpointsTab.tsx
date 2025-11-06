@@ -12,8 +12,9 @@ import { Checkpoint, Location } from "@/types/pagesData";
 import { createCheckPointTypeSchema } from "@/lib/validation/zodSchema";
 import { CheckPointForm } from "../forms/CheckpointForm";
 import { useQueryClient } from "@tanstack/react-query";
+import { Client } from "@/types/types";
 
-export default function CheckpointTab({ location,  onCheckpointCreated  }: { location: Location | null ,onCheckpointCreated?: () => void }) {
+export default function CheckpointTab({ location,  onCheckpointCreated  }: { location: Location | null,onCheckpointCreated?: () => void }) {
   if (!location) return "No Location ! "
   const [isOpen, setIsOpen] = useState<string>("");
   const [isPostLoading, setIsPostLoading] = useState<boolean>(false);
@@ -60,7 +61,7 @@ const handleCheckpointSaved = () => {
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
         <CustomFormLayout url="/checkpoints" validationSchema={createCheckPointTypeSchema} showNewBtn={false}
         item={currentCheckPoint} redirectUrl=""  onSave={handleCheckpointSaved} >
-          <CheckPointForm locationId={location.id} />
+          <CheckPointForm locationId={location.id}  clientId={location.client?.id || location.clientId} />
         </CustomFormLayout>
       </Modal>
       <div className="flex gap-3 mb-4">
