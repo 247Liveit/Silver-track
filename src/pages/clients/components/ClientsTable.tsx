@@ -27,7 +27,7 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
             return selectedItem
         });
         setIsOpen(type);
-        
+
     };
 
     return (
@@ -45,10 +45,22 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                                             {item.id} {(item.zip == "00" && item.phone == "000000") ? <Badge variant="destructive">Needs an Update</Badge> : ""}
                                         </h5>
                                     </td>
-                                    <td className="border-b border-[#eee] py-2 px-2   text-center">
-                                        <h5 className=" text-black">
-                                            {item.name}
-                                        </h5>
+                                    <td className="border-b border-[#eee] py-2 px-2 text-center">
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button
+                                                    className="text-black cursor-pointer hover:text-blue-600  transition-colors "
+                                                    onClick={() => handleSelection(item, 'showLocaitons')}
+                                                >
+                                                    {item.name}
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent 
+                                                
+                                                className="w-32 text-center px-0">
+                                                <p>View Locations</p>
+                                            </TooltipContent>
+                                        </Tooltip>
                                     </td>
                                     <td className="border-b border-[#eee] py-2 px-2   text-center">
                                         <h5 className=" text-black">
@@ -71,7 +83,7 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                                                 <TooltipTrigger asChild>
                                                     <button
                                                         className="hover:bg-gray-200 hover:rounded-2xl ml-2 p-1"
-                                                        onClick={() => handleSelection(item,'showLocaitons')}
+                                                        onClick={() => handleSelection(item, 'showLocaitons')}
                                                     >
                                                         <BuildingIcon className="h-5 w-5 text-orange-500" />
                                                     </button>
@@ -98,9 +110,9 @@ export default function ClientsTable({ items: data, setItems }: { items: Paginat
                             className={'!bg-background !px-1 w-full lg:w-[85%]'}>
                             <h5 className='text-2xl font-bold px-4'>{"Client Locations"}</h5>
 
-                            
+
                             <ClientLocations client={currentItem} />
-                        
+
                         </Modal>
 
                     </div>

@@ -24,6 +24,7 @@ export default function UserGroupsPage() {
           <div className="px-5">
             <div className="gap-3 mb-4">
               <PopupModal
+         
                 title='Add User Group'
                 extraBtns={() => {
                   return (
