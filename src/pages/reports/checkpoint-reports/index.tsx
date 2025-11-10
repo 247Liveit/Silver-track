@@ -23,7 +23,7 @@ export default function CheckpointReportsPage() {
     search: dropSearch,
     sortBy: "id",
     sortOrder: "DESC",
-    fields: "id,name",
+    fields: "id,name,clientId",
   }, []);
 
   const handleSearch = useCallback(
@@ -37,7 +37,7 @@ export default function CheckpointReportsPage() {
   function onGenerateReport() {
     setLoadingPost(true);
     axios.post('/reports/checkpoints', {
-      locationId: selectedLocation ? selectedLocation.id : null,
+      clientId: selectedLocation ? selectedLocation.clientId : null,
       allLocations: selecteAllLocation,
     }).then((response) => {
       console.log(response)

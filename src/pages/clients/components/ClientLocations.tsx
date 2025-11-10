@@ -55,7 +55,7 @@ const activeLocation = selectedLocation || data?.locations?.[0] || null;
                         <div className="w-full border-b mt-1 mb-1"></div>
                         <LocationInfoTab   location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                         <IssueTypesTab location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
-                        <CheckpointTab      location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
+                        <CheckpointTab  clientId ={client.id}     location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                     </Tabs>
 
                 </div>

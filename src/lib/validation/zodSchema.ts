@@ -50,6 +50,7 @@ export const createCheckPointTypeSchema = z.object({
     createIssueType: z.coerce.boolean().optional(),
     issue_type_id: z.coerce.number({message:"IssueType is Required"}).optional(),
     locationId: z.coerce.number({message:"Location is Required"}).optional(),
+    clientId: z.coerce.number({message:"cleint is Required"}).optional(),
 });
 
 export const createUserGroupSchema = z.object({

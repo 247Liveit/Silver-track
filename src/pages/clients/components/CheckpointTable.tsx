@@ -13,7 +13,7 @@ import { CheckPointForm } from "./forms/CheckpointForm";
 import { createCheckPointTypeSchema } from "@/lib/validation/zodSchema";
 import { set } from "date-fns";
 
-export default function CheckpointsTable({ items, onDataChange,locationId }: { items: Checkpoint[], onDataChange: any,locationId:number }) {
+export default function CheckpointsTable({ items, onDataChange,locationId,clientId }: { items: Checkpoint[], onDataChange: any,locationId:number,clientId:number }) {
 
     const [openDialog, setIsOpenDialog] = useState("");
 
@@ -123,7 +123,7 @@ export default function CheckpointsTable({ items, onDataChange,locationId }: { i
                         item={currentItem??{}} redirectUrl="" showNewBtn={false} onSave={() => { 
                             setIsOpenDialog(""); setCurrentItem(null); onDataChange();
                          }} >
-                            <CheckPointForm locationId={locationId} />
+                            <CheckPointForm locationId={locationId} clientId={clientId} />
                         </CustomFormLayout>
                     </Modal>
                 </div>

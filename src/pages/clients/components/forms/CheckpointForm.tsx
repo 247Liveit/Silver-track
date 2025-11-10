@@ -10,7 +10,7 @@ import { Location } from "@/types/pagesData";
 import { Client } from "@/types/types";
 
 
-export function CheckPointForm({ locationId}: { locationId: number }) {
+export function CheckPointForm({ locationId,clientId}: { locationId: number,clientId:number }) {
     const form = useContext(FormContext);
     const isActive = form.watch('isActive');
     const issueTypeId = form.watch('issue_type_id');
@@ -23,15 +23,17 @@ export function CheckPointForm({ locationId}: { locationId: number }) {
     const { data, isFetched } = useGet<IssueType>('/issue-types/names');
    
 
-    useEffect(() => {
+   useEffect(() => {
         form.setValue('locationId', locationId);
-    }, [form.itemState?.locationId])
-
- 
+        form.setValue('clientId', clientId);
+        
+        console.log("Values set:", { locationId, clientId });
+    }, [locationId, clientId]);
 
     return (
 
         <section className="grid lg:grid-cols-2 grid-cols-1 gap-4 overflow-y-auto max-h-[70vh] p-4">
+
             <CustomInput
                 className='col-span-2 dark:text-black'
                 title="Name"
@@ -51,7 +53,7 @@ export function CheckPointForm({ locationId}: { locationId: number }) {
                 disabled={false}
             />
 
-            
+           
 
             <div className="col-span-2 grid grid-cols-3 gap-4">
                 <CustomInput
