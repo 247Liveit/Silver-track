@@ -141,7 +141,7 @@ export default function IssueTypesTab({ location }: { location: Location | null 
       >
         <h5 className='text-2xl font-bold px-4'>{isOpen}</h5>
         <CustomFormLayout url="/issue-types" validationSchema={createIssueTypeSchema} item={currentIssue} redirectUrl="" onSave={() => { refetch(); setIsOpen(""); setCurrentIssue({}) }} >
-          <IssueTypeForm locationId={location.id} />
+          <IssueTypeForm locationId={location.id} clientId={location.clientId} />
         </CustomFormLayout>
       </Modal>
       <div className="flex gap-3 mb-4">
