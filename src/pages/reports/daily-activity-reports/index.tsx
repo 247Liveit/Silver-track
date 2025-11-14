@@ -20,8 +20,8 @@ export default function DailyReportForm() {
   const [levels, setLevels] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
   const [isLoadingPost, setLoadingPost] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<string>(getUTCDate(new Date()));
-  const [endDate, setEndDate] = useState<string>(getUTCDate(new Date()));
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   const { toast } = useToast();
   const axios = useAxiosAuth();
@@ -150,7 +150,7 @@ export default function DailyReportForm() {
         <DatePickerSimple
           title="Start"
           name="startDate"
-          defaultValue={getUTCDate(new Date())}
+     
           placeholder="Select start date"
           onChange={(e) => {
             console.log("Start:", e.target.value);
@@ -161,7 +161,6 @@ export default function DailyReportForm() {
         <DatePickerSimple
           title="End"
           name="endDate"
-          defaultValue={getUTCDate(new Date())}
           placeholder="Select end date"
           onChange={(e) => {
             console.log("End:", e.target.value);
