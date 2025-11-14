@@ -1,6 +1,6 @@
 import { CustomCheckBoxProps } from "@/types/forms/InputPropsType";
 import React from "react";
-// import { CustomCheckBoxProps } from "../../../../lib/types/forms";
+
 
 function CInlineCheckBoxSimple({ title, name, items, error, ...res }: CustomCheckBoxProps<{ id: string, name: string, display_name?: string | undefined,checked?:boolean }>, ref: any) {
     const item = items[0];

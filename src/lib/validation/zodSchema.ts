@@ -36,6 +36,7 @@ export const createIssueTypeSchema = z.object({
     displayInHandHeld: z.coerce.boolean().optional(),
     addTo: z.string().optional(),
     locationId: z.coerce.number({message:"Location is Required"}).optional(),
+    clientId:z.coerce.number({message:"client is Required"}).optional(),
 });
 export const createCheckPointTypeSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -50,6 +51,7 @@ export const createCheckPointTypeSchema = z.object({
     createIssueType: z.coerce.boolean().optional(),
     issue_type_id: z.coerce.number({message:"IssueType is Required"}).optional(),
     locationId: z.coerce.number({message:"Location is Required"}).optional(),
+    clientId: z.coerce.number({message:"cleint is Required"}).optional(),
 });
 
 export const createUserGroupSchema = z.object({
