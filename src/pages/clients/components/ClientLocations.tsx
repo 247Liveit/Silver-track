@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetSingle } from "@/lib/api/queries/generic";
-import LocationCard from "@/pages/home/components/locationCard";
 import { Location } from "@/types/pagesData";
 import { Client } from "@/types/types";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import LocationInfoTab from "./tabs/LocationInfoTab";
 import IssueTypesTab from "./tabs/IssueTypesTab";
 import CheckpointTab from "./tabs/CheckpointsTab";

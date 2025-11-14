@@ -26,8 +26,7 @@ export function CheckPointForm({ locationId,clientId}: { locationId: number,clie
    useEffect(() => {
         form.setValue('locationId', locationId);
         form.setValue('clientId', clientId);
-        
-        console.log("Values set:", { locationId, clientId });
+
     }, [locationId, clientId]);
 
     return (

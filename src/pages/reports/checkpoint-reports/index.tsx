@@ -18,7 +18,7 @@ export default function CheckpointReportsPage() {
   const { toast } = useToast();
   const axios = useAxiosAuth();
   
-  const { data: clients, isFetched, refetch } = useGetSingle<PaginationApiType<Client>>('/clients/paginate', {
+  const { data: clients,  refetch } = useGetSingle<PaginationApiType<Client>>('/clients/paginate', {
     limit: 1000,
     page: 1,
     search: dropSearch,
