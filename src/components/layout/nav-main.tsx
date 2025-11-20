@@ -139,6 +139,7 @@ export function NavMain({
                                 { title: "Checkpoint Reports", badge: undefined, icon: FileIcon, url: "/dashboard/checkpoint-reports",isActive:title=="Checkpoint Reports" },
                                 { title: "Daily Activity Report", badge: undefined, icon: ActivityIcon, url: "/dashboard/daily-activities-reports" },
                                 { title: "Daily Report(Compact)", badge: undefined, icon: ActivityIcon, url: "/dashboard/daily-activities-reports-compact" },
+                                { title: "User Shift Reports", badge: undefined, icon: FileIcon, url: "/dashboard/user-shift-reports", isActive: title == "User Shift Reports" },
                             ]
                         }} />
                     </SidebarMenuItem>
