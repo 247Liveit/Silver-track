@@ -6,28 +6,33 @@ import { useGet } from "@/lib/api/queries/generic";
 import { FormContext } from "@/providers/formContext";
 import { Checkpoint, IssueLevels, IssueType, IssueTypes } from "@/types/pagesData";
 import { useContext, useEffect } from "react";
+import { Location } from "@/types/pagesData";
+import { Client } from "@/types/types";
 
-export function CheckPointForm({ locationId }: { locationId: number }) {
+
+export function CheckPointForm({ locationId,clientId}: { locationId: number,clientId:number }) {
     const form = useContext(FormContext);
     const isActive = form.watch('isActive');
     const issueTypeId = form.watch('issue_type_id');
     const allowKeepOpen = form.watch('allowKeepOpen');
     const requiredPhoto = form.watch('requiredPhoto');
     const reportIfMissing = form.watch('reportIfMissing');
- 
+     
 
 
     const { data, isFetched } = useGet<IssueType>('/issue-types/names');
+   
 
-    useEffect(() => {
+   useEffect(() => {
         form.setValue('locationId', locationId);
-    }, [form.itemState?.locationId])
+        form.setValue('clientId', clientId);
 
-    
+    }, [locationId, clientId]);
 
     return (
 
         <section className="grid lg:grid-cols-2 grid-cols-1 gap-4 overflow-y-auto max-h-[70vh] p-4">
+
             <CustomInput
                 className='col-span-2 dark:text-black'
                 title="Name"
@@ -46,6 +51,9 @@ export function CheckPointForm({ locationId }: { locationId: number }) {
                 icon={<></>}
                 disabled={false}
             />
+
+           
+
             <div className="col-span-2 grid grid-cols-3 gap-4">
                 <CustomInput
                     type="text"
@@ -59,18 +67,18 @@ export function CheckPointForm({ locationId }: { locationId: number }) {
                 <img src={"/qrcode.png"} alt="QR Code" className="h-24 w-24 object-contain text-center" />
 
             </div>
-                <div className="col-span-2 grid lg:grid-cols-3 grid-cols-1 gap-4">
+            <div className="col-span-2 grid lg:grid-cols-3 grid-cols-1 gap-4">
                 <CustomSelect
-                    className='dark:text-black col-span-2' 
-                    title="Issue Type" 
+                    className='dark:text-black col-span-2'
+                    title="Issue Type"
                     name="issue_type_id"
                     otherOption={true}
                     options={isFetched ? (data ?? []).map(item => ({ label: item.name, value: item.id })) : []}
                     selected={undefined}
-                    placeholder='Select Issue ...' 
+                    placeholder='Select Issue ...'
                     icon={<></>}
                     type='single'
-                    
+
                 />
                 {((!issueTypeId || issueTypeId === "0") && !form?.itemState?.id) &&
                     <InlineCheckBox
