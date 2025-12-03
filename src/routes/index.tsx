@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import RequiredAuth from './RequiredAuth';
 import path from 'path';
+import GpsForm from '@/pages/gps/issue-map';
 const HomePage = lazy(() => import('@/pages'));
 const DashboardLayout = lazy(  () => import('@/components/layout/dashboard-layout'));
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
@@ -81,6 +82,10 @@ export default function AppRouter() {
             {
               path:'user-shift-reports',
               element:<UserShiftReportPage/>
+            },
+            {
+              path:'gps-map',
+              element:<GpsForm/>
             }
           ]
         }

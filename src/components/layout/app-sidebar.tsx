@@ -26,7 +26,7 @@ import { NavMain } from "@/components/layout/nav-main"
 import { NavUser } from "./nav-user"
 import { useAuthHook } from "@/providers/authContext"
 import { MobileIcon } from "@radix-ui/react-icons"
-
+import { MapIcon } from "lucide-react"
 const data = {
   navMain: [
     {
@@ -49,6 +49,13 @@ const data = {
       url: "/dashboard/user-devices",
       icon: MobileIcon,
     },
+
+    {
+         title:"Gps Map",
+         url:"/dashboard/gps-map",
+         icon:MapIcon
+
+    }
    
   ],
   navSecondary: [
