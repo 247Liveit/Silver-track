@@ -2,7 +2,7 @@
 import { FormContext } from '@/providers/formContext';;
 import CustomInput from '@/components/shared/form/inputs/CustomInput';
 import { useContext } from 'react';
-import { InlineCheckBox } from '@/components/shared/form/inputs';
+import InlineCheckBox from '@/components/shared/form/inputs/InlineCheckBox';
 
 const SpecialDaysForm = () => {
     const { register, errors, edit, setValue, itemState } = useContext(FormContext);

@@ -115,10 +115,10 @@ const IssueMap: React.FC<IssueMapProps> = ({ issues }) => {
             <Marker
               key={issue.id}
               position={position}
-              icon={markerIcon}
+              {...({ icon: markerIcon } as any)}
             >
               <Tooltip 
-                permanent 
+                permanent={true}
                 direction={tooltipConfig.direction}
                 offset={tooltipConfig.offset}
                 className="custom-tooltip"
