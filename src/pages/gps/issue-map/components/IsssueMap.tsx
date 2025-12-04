@@ -69,10 +69,12 @@ const IssueMap: React.FC<IssueMapProps> = ({ issues }) => {
   return (
     <div style={{ height: '600px', width: '100%' }} className="rounded-lg shadow-lg">
       <MapContainer
-        center={center}
-        zoom={15}
-        scrollWheelZoom={true}
-        style={{ height: '100%', width: '100%' }}
+        {...({
+          center,
+          zoom: 15,
+          scrollWheelZoom: true,
+          style: { height: '100%', width: '100%' },
+        } as any)}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         
@@ -118,11 +120,13 @@ const IssueMap: React.FC<IssueMapProps> = ({ issues }) => {
               {...({ icon: markerIcon } as any)}
             >
               <Tooltip 
-                permanent={true}
-                direction={tooltipConfig.direction}
-                offset={tooltipConfig.offset}
-                className="custom-tooltip"
-                opacity={0.98}
+                {...({
+                  permanent: true,
+                  direction: tooltipConfig.direction,
+                  offset: tooltipConfig.offset,
+                  className: "custom-tooltip",
+                  opacity: 0.98,
+                } as any)}
               >
                 <div style={{ 
                   minWidth: '220px', 
