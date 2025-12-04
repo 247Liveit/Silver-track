@@ -13,7 +13,7 @@ const UserGroupsPage = lazy(() => import('@/pages/user-groups'));
 const UserDevicePage = lazy(() => import('@/pages/user-devices'));
 const CheckpointReportsPage = lazy(() => import('@/pages/reports/checkpoint-reports'));
 const DailyActivitiesReportPage = lazy(() => import('@/pages/reports/daily-activity-reports'));
-
+const DailyActivitiesReportCompactPage = lazy(()=> import('@/pages/reports/daily-activity-reports-compact.ts'))
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -71,6 +71,10 @@ export default function AppRouter() {
             {
               path: 'daily-activities-reports',
               element: <DailyActivitiesReportPage />
+            },
+                   {
+              path: 'daily-activities-reports-compact',
+              element: <DailyActivitiesReportCompactPage />
             },
           ]
         }

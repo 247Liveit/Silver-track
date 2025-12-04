@@ -13,7 +13,7 @@ import { Client } from "@/types/types";
 
 
 
-export default function DailyReportForm() {
+export default function DailyReportFormCompact() {
 
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [dropSearch, setDropSearch] = useState<string>("");
@@ -36,7 +36,7 @@ export default function DailyReportForm() {
       sortOrder: "DESC",
       fields: "id,name,contactName",
     },
-    []
+    [dropSearch]
   );
 
   const handleSearch = useCallback(
@@ -74,7 +74,7 @@ export default function DailyReportForm() {
 
    
 
-    axios.post('/reports/daily-activities', {
+    axios.post('/reports/daily-activities-compact', {
       startDate: startDate,
       endDate: endDate,
       clientId: selectedClient?.id ?? null,
@@ -219,7 +219,7 @@ export default function DailyReportForm() {
           className="mt-4 text-center"
           onClick={() => !isLoadingPost && onGenerateReport()}
         >
-          {isLoadingPost ? "Processing..." : "Generate Report"}
+          {isLoadingPost ? "Processing..." : "Generate Compact Report"}
         </Button>
       </div>
 
