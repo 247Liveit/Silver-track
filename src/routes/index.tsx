@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import RequiredAuth from './RequiredAuth';
+import path from 'path';
 const HomePage = lazy(() => import('@/pages'));
 const DashboardLayout = lazy(  () => import('@/components/layout/dashboard-layout'));
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
@@ -14,6 +15,7 @@ const UserDevicePage = lazy(() => import('@/pages/user-devices'));
 const CheckpointReportsPage = lazy(() => import('@/pages/reports/checkpoint-reports'));
 const DailyActivitiesReportPage = lazy(() => import('@/pages/reports/daily-activity-reports'));
 const DailyActivitiesReportCompactPage = lazy(()=> import('@/pages/reports/daily-activity-reports-compact.ts'))
+const UserShiftReportPage = lazy(()=> import ('@/pages/reports/user-shift-reports'))
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -76,6 +78,10 @@ export default function AppRouter() {
               path: 'daily-activities-reports-compact',
               element: <DailyActivitiesReportCompactPage />
             },
+            {
+              path:'user-shift-reports',
+              element:<UserShiftReportPage/>
+            }
           ]
         }
       ]

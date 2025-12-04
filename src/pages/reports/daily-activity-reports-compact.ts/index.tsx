@@ -106,7 +106,7 @@ export default function DailyReportFormCompact() {
 
         const blob = new Blob([htmlContent], { type: "text/html" });
         const url = URL.createObjectURL(blob);
-        window.open(url, "_blank");
+            window.open(url, "_blank", "noopener");
 
         toast({
           title: "Success",

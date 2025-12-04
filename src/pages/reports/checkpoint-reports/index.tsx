@@ -54,7 +54,7 @@ export default function CheckpointReportsPage() {
       console.log(response)
       const blob = new Blob([response.data.data], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+     window.open(url, "_blank", "noopener");
       
       toast({
         title: "Success",
