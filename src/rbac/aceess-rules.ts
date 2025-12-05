@@ -59,11 +59,11 @@ export const rules: Rules = {
         [Action.Delete]: { can: "all", }, 
     },
     [Role.TRACKER_MANAGER]: {
-        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
-        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
-        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
-        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
-        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared] },
+        [Action.Manage]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared,Resource.Reports,Resource.Map] },
+        [Action.Create]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared,Resource.Reports,Resource.Map] },
+        [Action.Read]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared,Resource.Reports,Resource.Map] },
+        [Action.Update]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared,Resource.Reports,Resource.Map] },
+        [Action.Delete]: { can: [ Resource.Users, Resource.Preferences, Resource.Clients, Resource.Shared,Resource.IssueTypes,Resource.Checkpoint,Resource.UserDevice,Resource.Shared,Resource.Reports,Resource.Map] },
     },
     [Role.TRACKER_READER]: {
         [Action.Read]: { can: [ 
