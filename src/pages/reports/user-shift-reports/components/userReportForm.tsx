@@ -5,11 +5,19 @@ import { debounce } from "@/lib/utils";
 import { FormContext } from "@/providers/formContext";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { User } from "@/types/types";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useState, useEffect, useRef } from "react";
 
 const UserShiftReportForm = () => {
   const form = useContext(FormContext);
   const [dropSearch, setDropSearch] = useState<string>("");
+  
+  const [savedValues, setSavedValues] = useState({
+    startDate: "",
+    endDate: "",
+    userId: undefined,
+  });
+  
+  const hasRestoredRef = useRef(false);
 
   const { data: users, refetch } = useGetSingle<PaginationApiType<User>>(
     "/users",
@@ -36,7 +44,44 @@ const UserShiftReportForm = () => {
     return <div>Loading...</div>;
   }
 
-  const { errors, getValues } = form;
+  const { errors, getValues, setValue, watch } = form;
+
+  const watchedValues = watch();
+
+
+  useEffect(() => {
+    if (watchedValues) {
+      setSavedValues({
+        startDate: watchedValues.startDate || "",
+        endDate: watchedValues.endDate || "",
+        userId: watchedValues.userId,
+      });
+    }
+  }, [watchedValues]);
+
+ 
+  useEffect(() => {
+    const currentStartDate = getValues("startDate");
+  
+    
+   
+    if (
+      savedValues.startDate &&
+      !currentStartDate &&
+      !hasRestoredRef.current
+    ) {
+      setValue("startDate", savedValues.startDate);
+      setValue("endDate", savedValues.endDate);
+      if (savedValues.userId) setValue("userId", savedValues.userId);
+      
+      hasRestoredRef.current = true;
+      
+     
+      setTimeout(() => {
+        hasRestoredRef.current = false;
+      }, 100);
+    }
+  }, [getValues, savedValues, setValue]);
 
   return (
     <>
