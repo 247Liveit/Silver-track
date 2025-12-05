@@ -1,13 +1,10 @@
 import CustomInput from "@/components/shared/form/inputs/CustomInput";
 import CustomSelect from "@/components/shared/form/inputs/CustomSelect";
 import InlineCheckBox from "@/components/shared/form/inputs/InlineCheckBox";
-import InlineRadioButton from "@/components/shared/form/inputs/InlineRadioButton";
 import { useGet } from "@/lib/api/queries/generic";
 import { FormContext } from "@/providers/formContext";
-import { Checkpoint, IssueLevels, IssueType, IssueTypes } from "@/types/pagesData";
+import { IssueType } from "@/types/pagesData";
 import { useContext, useEffect } from "react";
-import { Location } from "@/types/pagesData";
-import { Client } from "@/types/types";
 
 
 export function CheckPointForm({ locationId,clientId}: { locationId: number,clientId:number }) {

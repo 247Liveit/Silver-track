@@ -30,13 +30,10 @@ export function GpsFormContent() {
     return <div>Loading...</div>;
   }
 
-  const { watch, setValue } = formContext;
+  const { watch, setValue,errors } = formContext;
 
   const [dropSearch, setDropSearch] = useState<string>("");
-  const [issues, setIssues] = useState<Issue[]>(
-    navigationState?.selectedIssue ? [navigationState.selectedIssue] : []
-  );
-  const [showMap, setShowMap] = useState<boolean>(!!navigationState?.selectedIssue);
+
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoadingLocations, setIsLoadingLocations] = useState<boolean>(false);
   const [isLoadingMap, setIsLoadingMap] = useState<boolean>(false);
@@ -46,7 +43,7 @@ export function GpsFormContent() {
 
   const { toast } = useToast();
   const axios = useAxiosAuth();
-
+console.log("Form errors:", errors);
   // Watch form values
   const clientId = watch("clientId");
   const locationId = watch("locationId");
@@ -67,17 +64,6 @@ export function GpsFormContent() {
     },
     []
   );
-
-  const selectedClient = useMemo(
-    () => clients?.items.find((c) => c.id === clientId) || null,
-    [clients, clientId]
-  );
-
-  const selectedLocation = useMemo(
-    () => locations.find((l) => l.id === locationId) || null,
-    [locations, locationId]
-  );
-
 
   
   const fetchLocations = useCallback(
@@ -156,13 +142,11 @@ export function GpsFormContent() {
     if (currentClientId) {
       fetchLocations(currentClientId);
       setValue("locationId", null);
-      setShowMap(false);
-      setIssues([]);
+    
     } else {
       setLocations([]);
       setValue("locationId", null);
-      setShowMap(false);
-      setIssues([]);
+    
     }
   }, [clientId, fetchLocations, setValue]);
 
@@ -250,13 +234,11 @@ export function GpsFormContent() {
             description: "No issues with geolocation found for the selected filters",
             variant: "destructive",
           });
-          setIssues([]);
-          setShowMap(false);
+         
           return;
         }
 
-        setIssues(response.data.issues);
-        setShowMap(true);
+    
 
         toast({
           title: "Success",
@@ -273,8 +255,7 @@ export function GpsFormContent() {
             description: "No issues with geolocation found for the selected filters",
             variant: "destructive",
           });
-          setIssues([]);
-          setShowMap(false);
+       
           return;
         }
 
@@ -290,8 +271,7 @@ export function GpsFormContent() {
           variant: "destructive",
         });
 
-        setIssues([]);
-        setShowMap(false);
+       
       })
       .finally(() => setIsLoadingMap(false));
   }, [clientId, locationId, startDate, endDate, levels, types, axios, toast]);
@@ -384,27 +364,7 @@ export function GpsFormContent() {
         />
       </div>
 
-      <div className="p-4 flex items-center justify-center">
-        <Button
-          type="button"
-          className="mt-4 text-center"
-          onClick={onShowMap}
-          disabled={isLoadingMap}
-        >
-          {isLoadingMap ? "Loading..." : "Show Map"}
-        </Button>
-      </div>
 
-      {showMap && issues.length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-xl font-bold mb-4">
-            Issues Map - {selectedClient?.name}
-            {selectedLocation && ` - ${selectedLocation.name}`}
-            {` (${issues.length} issues)`}
-          </h2>
-          <IssueMap issues={issues} />
-        </div>
-      )}
     </>
   );
 }
