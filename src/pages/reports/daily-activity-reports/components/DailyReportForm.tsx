@@ -7,7 +7,7 @@ import { FormContext } from "@/providers/formContext";
 import { LeveloptionsArray, typeOptions } from "@/types/pagesData";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { Client } from "@/types/types";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 interface DailyReportFormProps {
   showDate: boolean;
@@ -17,7 +17,13 @@ interface DailyReportFormProps {
 const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
   const form = useContext(FormContext);
   const [dropSearch, setDropSearch] = useState<string>("");
-
+ const [savedValues, setSavedValues] = useState({
+    startDate: "",
+    endDate: "",
+    clientId: undefined,
+    level: [],
+    type: [],
+  });
   const { data: clients, refetch } = useGetSingle<PaginationApiType<Client>>(
     "/clients/paginate",
     {
@@ -30,7 +36,7 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
     },
     []
   );
-
+  const hasRestoredRef = useRef(false);
   const handleSearch = useCallback(
     debounce((searchTerm: string) => {
       setDropSearch(searchTerm);
@@ -44,7 +50,50 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
     return <div>Loading...</div>;
   }
 
-  const { errors, edit, getValues } = form;
+  const { errors, edit, getValues, setValue, watch } = form;
+
+
+   const watchedValues = watch();
+
+     useEffect(() => {
+    if (watchedValues) {
+      setSavedValues({
+        startDate: watchedValues.startDate || "",
+        endDate: watchedValues.endDate || "",
+        clientId: watchedValues.clientId,
+        level: watchedValues.level || [],
+        type: watchedValues.type || [],
+      });
+    }
+  }, [watchedValues]);
+
+
+
+    useEffect(() => {
+    const currentStartDate = getValues("startDate");
+
+    
+ 
+    if (
+      savedValues.startDate &&
+      !currentStartDate &&
+      !hasRestoredRef.current
+    ) {
+      setValue("startDate", savedValues.startDate);
+      setValue("endDate", savedValues.endDate);
+      if (savedValues.clientId) setValue("clientId", savedValues.clientId);
+      if (savedValues.level?.length) setValue("level", savedValues.level);
+      if (savedValues.type?.length) setValue("type", savedValues.type);
+      
+      hasRestoredRef.current = true;
+      
+      
+      setTimeout(() => {
+        hasRestoredRef.current = false;
+      }, 100);
+    }
+  }, [getValues, savedValues, setValue]);
+
 
   return (
     <>
