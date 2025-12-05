@@ -1,5 +1,4 @@
 import AdvanceSelectSimple from "@/components/shared/form/inputs/AdvanceSelectSimple";
-import DatePickerSimple from "@/components/shared/form/inputs/DatePickerSimple ";
 import InlineCheckBoxSimple from "@/components/shared/form/inputs/InlineCheckBoxSimple";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,6 +12,7 @@ import { Client } from "@/types/types";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import IssueMap from "./IsssueMap";
+import DatePickerSimple from "@/components/shared/form/inputs/DatePickerSimple";
 
 
 export function GpsFormContent() {
