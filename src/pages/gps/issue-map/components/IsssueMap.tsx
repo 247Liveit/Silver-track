@@ -107,13 +107,13 @@ const IssueMap: React.FC<IssueMapProps> = ({ issues }) => {
     ];
 
   return (
-    <div style={{ height: '600px', width: '100%' }} className="rounded-lg shadow-lg">
+    <div style={{ height: '600px', width: '100%', position: 'relative', zIndex: 0 }} className="rounded-lg shadow-lg">
       <MapContainer
         //@ts-ignore
         center={center}
         zoom={15}
         scrollWheelZoom={true}
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', zIndex: 0 }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 

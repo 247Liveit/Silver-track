@@ -1,5 +1,7 @@
 import AdvanceSelect from "@/components/shared/form/inputs/AdvanceSelect";
-import CustomInput from "@/components/shared/form/inputs/CustomInput";
+
+import CustomInputDateTime from "@/components/shared/form/inputs/CustomInputDateTime";
+
 import InlineCheckBox from "@/components/shared/form/inputs/InlineCheckBox";
 import { useGetSingle } from "@/lib/api/queries/generic";
 import { debounce } from "@/lib/utils";
@@ -20,6 +22,8 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
  const [savedValues, setSavedValues] = useState({
     startDate: "",
     endDate: "",
+    startTime: "", 
+    endTime: "",
     clientId: undefined,
     level: [],
     type: [],
@@ -55,11 +59,15 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
 
    const watchedValues = watch();
 
+
+
      useEffect(() => {
     if (watchedValues) {
       setSavedValues({
         startDate: watchedValues.startDate || "",
         endDate: watchedValues.endDate || "",
+        startTime: watchedValues.startTime || "", 
+        endTime: watchedValues.endTime || "",  
         clientId: watchedValues.clientId,
         level: watchedValues.level || [],
         type: watchedValues.type || [],
@@ -81,6 +89,8 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
     ) {
       setValue("startDate", savedValues.startDate);
       setValue("endDate", savedValues.endDate);
+      if (savedValues.startTime) setValue("startTime", savedValues.startTime);
+      if (savedValues.endTime) setValue("endTime", savedValues.endTime); 
       if (savedValues.clientId) setValue("clientId", savedValues.clientId);
       if (savedValues.level?.length) setValue("level", savedValues.level);
       if (savedValues.type?.length) setValue("type", savedValues.type);
@@ -100,17 +110,21 @@ const DailyReportForm = ({ showDate, type }: DailyReportFormProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {showDate && (
           <>
-            <CustomInput
-              title="Start"
+            <CustomInputDateTime
+                          title="Start"
               name="startDate"
               type="date"
+              showTime={true}
+              timeName="startTime" 
               placeholder="Select start date"
               className="px-1"
             />
-            <CustomInput
+            <CustomInputDateTime
               title="End"
               name="endDate"
               type="date"
+              showTime={true}
+              timeName="endTime"
               placeholder="Select end date"
               className="px-1"
             />

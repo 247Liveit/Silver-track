@@ -5,6 +5,7 @@ import { debounce } from "@/lib/utils";
 import { FormContext } from "@/providers/formContext";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { User } from "@/types/types";
+import CustomInputDateTime from "@/components/shared/form/inputs/CustomInputDateTime";
 import { useCallback, useContext, useState, useEffect, useRef } from "react";
 
 const UserShiftReportForm = () => {
@@ -14,6 +15,8 @@ const UserShiftReportForm = () => {
   const [savedValues, setSavedValues] = useState({
     startDate: "",
     endDate: "",
+    startTime: "", 
+    endTime: "",
     userId: undefined,
   });
   
@@ -54,6 +57,8 @@ const UserShiftReportForm = () => {
       setSavedValues({
         startDate: watchedValues.startDate || "",
         endDate: watchedValues.endDate || "",
+           startTime: watchedValues.startTime || "", 
+        endTime: watchedValues.endTime || "",  
         userId: watchedValues.userId,
       });
     }
@@ -72,6 +77,8 @@ const UserShiftReportForm = () => {
     ) {
       setValue("startDate", savedValues.startDate);
       setValue("endDate", savedValues.endDate);
+            if (savedValues.startTime) setValue("startTime", savedValues.startTime);
+      if (savedValues.endTime) setValue("endTime", savedValues.endTime); 
       if (savedValues.userId) setValue("userId", savedValues.userId);
       
       hasRestoredRef.current = true;
@@ -86,17 +93,21 @@ const UserShiftReportForm = () => {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <CustomInput
+        <CustomInputDateTime
           title="Start Date"
           name="startDate"
           type="date"
+                showTime={true}
+               timeName="startTime" 
           placeholder="Select start date"
           className="px-1"
         />
-        <CustomInput
+        <CustomInputDateTime
           title="End Date"
           name="endDate"
           type="date"
+          showTime={true}
+          timeName="endTime"
           placeholder="Select end date"
           className="px-1"
         />

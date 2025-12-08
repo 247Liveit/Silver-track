@@ -6,6 +6,8 @@ import UserShiftReportForm from "./components/userReportForm";
 const validationSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
+  startTime: z.string().optional(), 
+  endTime: z.string().optional(),
   userId: z.coerce.number({ required_error: "Please select a user" }),
 }).refine((data) => {
   if (data.startDate && data.endDate) {
@@ -43,6 +45,8 @@ export default function UserShiftReportPage() {
         item={{
           startDate: "",
           endDate: "",
+          startTime: "",  
+          endTime: "",
           userId: null,
         }}
         redirectUrl=""

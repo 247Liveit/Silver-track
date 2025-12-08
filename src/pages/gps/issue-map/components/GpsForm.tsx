@@ -11,7 +11,6 @@ import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { Client } from "@/types/types";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import IssueMap from "./IsssueMap";
 import DatePickerSimple from "@/components/shared/form/inputs/DatePickerSimple";
 
 
@@ -30,7 +29,7 @@ export function GpsFormContent() {
     return <div>Loading...</div>;
   }
 
-  const { watch, setValue,errors } = formContext;
+  const { watch, setValue, errors } = formContext;
 
   const [dropSearch, setDropSearch] = useState<string>("");
 
@@ -43,7 +42,7 @@ export function GpsFormContent() {
 
   const { toast } = useToast();
   const axios = useAxiosAuth();
-console.log("Form errors:", errors);
+  console.log("Form errors:", errors);
   // Watch form values
   const clientId = watch("clientId");
   const locationId = watch("locationId");
@@ -51,6 +50,8 @@ console.log("Form errors:", errors);
   const types = watch("type") || [];
   const startDate = watch("startDate");
   const endDate = watch("endDate");
+  const startTime = watch("startTime");
+  const endTime = watch("endTime");
 
   const { data: clients, refetch } = useGetSingle<PaginationApiType<Client>>(
     "/clients/paginate",
@@ -65,7 +66,7 @@ console.log("Form errors:", errors);
     []
   );
 
-  
+
   const fetchLocations = useCallback(
     async (clientIdValue: number): Promise<Location[]> => {
       setIsLoadingLocations(true);
@@ -106,7 +107,7 @@ console.log("Form errors:", errors);
       previousClientIdRef.current = initialClientId;
 
       fetchLocations(initialClientId).then((locationData) => {
-        
+
         if (navigationState?.locationId) {
           const navLocation = locationData.find(
             (l) => l.id === navigationState.locationId
@@ -134,7 +135,7 @@ console.log("Form errors:", errors);
 
     const currentClientId = clientId && clientId > 0 ? clientId : null;
 
-  
+
     if (currentClientId === previousClientIdRef.current) return;
 
     previousClientIdRef.current = currentClientId;
@@ -142,11 +143,11 @@ console.log("Form errors:", errors);
     if (currentClientId) {
       fetchLocations(currentClientId);
       setValue("locationId", null);
-    
+
     } else {
       setLocations([]);
       setValue("locationId", null);
-    
+
     }
   }, [clientId, fetchLocations, setValue]);
 
@@ -195,94 +196,94 @@ console.log("Form errors:", errors);
     [types, setValue]
   );
 
-  const onShowMap = useCallback(() => {
-    if (!clientId || clientId === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please select a client",
-        variant: "destructive",
-      });
-      return;
-    }
+  // const onShowMap = useCallback(() => {
+  //   if (!clientId || clientId === 0) {
+  //     toast({
+  //       title: "Validation Error",
+  //       description: "Please select a client",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    if (!startDate || !endDate) {
-      toast({
-        title: "Validation Error",
-        description: "Please select both start and end dates",
-        variant: "destructive",
-      });
-      return;
-    }
+  //   if (!startDate || !endDate) {
+  //     toast({
+  //       title: "Validation Error",
+  //       description: "Please select both start and end dates",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    setIsLoadingMap(true);
+  //   setIsLoadingMap(true);
 
-    const requestBody = {
-      clientId,
-      locationId: locationId || undefined,
-      startDate,
-      endDate,
-      level: levels && levels.length > 0 ? levels : undefined,
-      type: types && types.length > 0 ? types : undefined,
-    };
+  //   const requestBody = {
+  //     clientId,
+  //     locationId: locationId || undefined,
+  //     startDate,
+  //     endDate,
+  //     level: levels && levels.length > 0 ? levels : undefined,
+  //     type: types && types.length > 0 ? types : undefined,
+  //   };
 
-    axios
-      .post("/map/client/issues", requestBody)
-      .then((response) => {
-        if (!response.data.issues || response.data.issues.length === 0) {
-          toast({
-            title: "No Data Found",
-            description: "No issues with geolocation found for the selected filters",
-            variant: "destructive",
-          });
-         
-          return;
-        }
+  //   axios
+  //     .post("/map/client/issues", requestBody)
+  //     .then((response) => {
+  //       if (!response.data.issues || response.data.issues.length === 0) {
+  //         toast({
+  //           title: "No Data Found",
+  //           description: "No issues with geolocation found for the selected filters",
+  //           variant: "destructive",
+  //         });
 
-    
+  //         return;
+  //       }
 
-        toast({
-          title: "Success",
-          description: `Found ${response.data.total} issue(s) with location data`,
-          variant: "default",
-        });
-      })
-      .catch((error) => {
-        console.error("Error details:", error.response?.data || error);
 
-        if (error.response?.status === 404) {
-          toast({
-            title: "No Data Found",
-            description: "No issues with geolocation found for the selected filters",
-            variant: "destructive",
-          });
-       
-          return;
-        }
 
-        const errorMessage = error.response?.data?.message
-          ? Array.isArray(error.response.data.message)
-            ? error.response.data.message.join(", ")
-            : error.response.data.message
-          : error.message || "Failed to load issues";
+  //       toast({
+  //         title: "Success",
+  //         description: `Found ${response.data.total} issue(s) with location data`,
+  //         variant: "default",
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error details:", error.response?.data || error);
 
-        toast({
-          title: "Error",
-          description: errorMessage,
-          variant: "destructive",
-        });
+  //       if (error.response?.status === 404) {
+  //         toast({
+  //           title: "No Data Found",
+  //           description: "No issues with geolocation found for the selected filters",
+  //           variant: "destructive",
+  //         });
 
-       
-      })
-      .finally(() => setIsLoadingMap(false));
-  }, [clientId, locationId, startDate, endDate, levels, types, axios, toast]);
+  //         return;
+  //       }
+
+  //       const errorMessage = error.response?.data?.message
+  //         ? Array.isArray(error.response.data.message)
+  //           ? error.response.data.message.join(", ")
+  //           : error.response.data.message
+  //         : error.message || "Failed to load issues";
+
+  //       toast({
+  //         title: "Error",
+  //         description: errorMessage,
+  //         variant: "destructive",
+  //       });
+
+
+  //     })
+  //     .finally(() => setIsLoadingMap(false));
+  // }, [clientId, locationId, startDate, endDate, levels, types, axios, toast]);
 
   const locationOptions = useMemo(
     () =>
       Array.isArray(locations)
         ? locations.map((location) => ({
-            label: location.name || location.address || `Location ${location.id}`,
-            value: location.id.toString(),
-          }))
+          label: location.name || location.address || `Location ${location.id}`,
+          value: location.id.toString(),
+        }))
         : [],
     [locations]
   );
@@ -306,6 +307,12 @@ console.log("Form errors:", errors);
           name="startDate"
           placeholder="Select start date"
           onChange={(e) => setValue("startDate", e.target.value)}
+          showTime={true}
+          timeName="startTime"
+          timeValue={startTime}
+          onTimeChange={(e) => setValue("startTime", e.target.value)}
+          error={errors?.startDate?.message}
+          timeError={errors?.startTime?.message}
         />
 
         <DatePickerSimple
@@ -313,6 +320,12 @@ console.log("Form errors:", errors);
           name="endDate"
           placeholder="Select end date"
           onChange={(e) => setValue("endDate", e.target.value)}
+          showTime={true}
+          timeName="endTime"
+          timeValue={endTime}
+          onTimeChange={(e) => setValue("endTime", e.target.value)}
+          error={errors?.endDate?.message}
+          timeError={errors?.endTime?.message}
         />
       </div>
 

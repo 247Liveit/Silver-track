@@ -8,7 +8,7 @@
         '/dashboard/checkpoint-reports': 'Checkpoint Reports',
         '/dashboard/daily-activities-reports': 'Daily Activities Report',
         '/dashboard/user-devices': 'User Devices',
-        '/dashboard/daily-activities-reports-compact':'daily reports compact',
-        '/dashboard/user-shift-reports':'user-shift-reports',
+        '/dashboard/daily-activities-reports-compact':'Daily Reports Compact',
+        '/dashboard/user-shift-reports':'User Shift Reports',
         '/dashboard/gps-map': 'GPS Map'
       };
