@@ -6,6 +6,8 @@ import DailyReportForm from "./components/DailyReportForm";
 const validationSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
+  startTime: z.string().optional(), 
+  endTime: z.string().optional(), 
   clientId: z.coerce.number({ required_error: "Please select a client" }),
   level: z.array(z.string()).optional(),
   type: z.array(z.string()).optional(),
@@ -42,6 +44,8 @@ export default function DailyActivitiesReportPage() {
         item={{
           startDate: "",
           endDate: "",
+          startTime: "",  
+          endTime: "",
           clientId: undefined,
           level: [],
           type: [],

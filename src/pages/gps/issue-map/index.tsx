@@ -12,6 +12,8 @@ const gpsFormSchema = z.object({
   locationId: z.number().optional().nullable(),
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(),
   level: z.array(z.string()).optional(),
   type: z.array(z.string()).optional(),
 });
@@ -41,6 +43,8 @@ export default function GpsForm() {
     locationId: navigationState?.locationId,
     startDate: "",
     endDate: "",
+    startTime: "",
+    endTime: "",
     level: navigationState?.selectedIssue?.issueType?.level
       ? [navigationState.selectedIssue.issueType.level]
       : [],
@@ -69,7 +73,7 @@ export default function GpsForm() {
         <GpsFormContent />
       </CustomFormLayout>
       {issues && issues.length > 0 && (
-        <div className="mt-6">
+        <div className="mt-6 relative z-0 ">
           <h2 className="text-xl font-bold mb-4">
             Issues Map
             {` (${issues.length} issues)`}

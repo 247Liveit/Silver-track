@@ -8,10 +8,12 @@ import DailyReportForm from "../daily-activity-reports/components/DailyReportFor
 const validationSchema = z.object({
   startDate:z.string().min(1,"Start date is required"),
   endDate:z.string().min(1,"End date is required"),
+  startTime: z.string().optional(), 
+  endTime: z.string().optional(),
   clientId:z.coerce.number({required_error:"Please select a client"}),
-   level:z.array(z.string()).optional(),
-   type:z.array(z.string()).optional(),
-   compact:z.boolean().optional()
+  level:z.array(z.string()).optional(),
+  type:z.array(z.string()).optional(),
+  compact:z.boolean().optional()
 })
 
 
@@ -44,6 +46,8 @@ return (
    item={{
     startDate:"",
     endDate:"",
+    startTime: "",  
+    endTime: "",
     clientId:undefined,
     level:[],
     type:[],
