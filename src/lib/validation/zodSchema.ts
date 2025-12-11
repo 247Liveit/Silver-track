@@ -21,7 +21,7 @@ export const createUserDeviceSchema = z.object({
 
 });
 export const updateUserDeviceStatusSchema = z.object({
-    isActive: z.union([z.string().length(0), z.string().min(1, { message: "is Active is Required" }),z.coerce.boolean()]).optional(),
+    isActive: z.union([z.string().length(0), z.string().min(1, { message: "is Active is Required" }), z.coerce.boolean()]).optional(),
 });
 export const createIssueTypeSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -35,8 +35,8 @@ export const createIssueTypeSchema = z.object({
     checkPointOnly: z.coerce.boolean().optional(),
     displayInHandHeld: z.coerce.boolean().optional(),
     addTo: z.string().optional(),
-    locationId: z.coerce.number({message:"Location is Required"}).optional(),
-    clientId:z.coerce.number({message:"client is Required"}).optional(),
+    locationId: z.coerce.number({ message: "Location is Required" }).optional(),
+    clientId: z.coerce.number({ message: "client is Required" }).optional(),
 });
 export const createCheckPointTypeSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -49,9 +49,9 @@ export const createCheckPointTypeSchema = z.object({
     requiredPhoto: z.coerce.boolean().optional(),
     reportIfMissing: z.coerce.boolean().optional(),
     createIssueType: z.coerce.boolean().optional(),
-    issue_type_id: z.coerce.number({message:"IssueType is Required"}).optional(),
-    locationId: z.coerce.number({message:"Location is Required"}).optional(),
-    clientId: z.coerce.number({message:"cleint is Required"}).optional(),
+    issue_type_id: z.coerce.number({ message: "IssueType is Required" }).optional(),
+    locationId: z.coerce.number({ message: "Location is Required" }).optional(),
+    clientId: z.coerce.number({ message: "cleint is Required" }).optional(),
 });
 
 export const createUserGroupSchema = z.object({
@@ -59,14 +59,14 @@ export const createUserGroupSchema = z.object({
     locationIds: z.any(),
 });
 
-export const UserGroupFormDataFormat={
-    locationIds : (value) =>{  
-        console.log("LocationIds",value)
-        const val= value.filter(item => item != "" && item != null )
-        console.log("LocationIdsRes",val)
+export const UserGroupFormDataFormat = {
+    locationIds: (value) => {
+        console.log("LocationIds", value)
+        const val = value.filter(item => item != "" && item != null)
+        console.log("LocationIdsRes", val)
         return val;
     }
-} 
+}
 export const updateUserSchema = z.object({
     password: z.union([z.string().length(0), z.string().min(8, { message: "Password must be at least 8 characters" })]).optional(),
     name: z.string().min(1, { message: "Name is required" }),
@@ -95,7 +95,7 @@ export const extraChargesSchema = z.object({
 export const clientSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
     email: z.string().min(1, { message: "Email is required" }).email(),
-    managerEmail: z.union([z.string().length(0), z.number(),  z.string().min(1, { message: "Manager Email is required" }).email()]).optional(),
+    managerEmail: z.union([z.string().length(0), z.number(), z.string().min(1, { message: "Manager Email is required" }).email()]).optional(),
     address: z.string().min(1, { message: "Address is required" }),
     address2: z.union([z.string().length(0), z.number(), z.string().min(1, { message: "is Address2 is Required" })]).optional(),
     city: z.string().min(1, { message: "City is required" }),
@@ -105,7 +105,7 @@ export const clientSchema = z.object({
     phone: z.string().min(1, { message: "Phone is required" }),
     fax: z.any(),
     notes: z.any(),
-    termId:z.string().min(1, { message: "Phone is required" }),
+    termId: z.string().min(1, { message: "Phone is required" }),
 });
 // const MAX_FILE_SIZE = 8000000;
 // const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -125,7 +125,7 @@ export const createLocationSchema = z.object({
 
 });
 export const createMultipleInvoiceSchema = z.object({
-    locationsId:z.any(),
+    locationsId: z.any(),
     fromDate: z.string().min(1, { message: "Tracking From is required" }),
     toDate: z.string().min(1, { message: "Tracking to is required" }),
     sendEmail: z.any(),
@@ -152,8 +152,8 @@ export const createInvoiceSchema = z.object({
     totalBreakHours: z.any(),
     otherAmount: preprocess((val) => {
         try {
-            if(val)
-            return parseFloat(val as string);
+            if (val)
+                return parseFloat(val as string);
 
             return 0;
         } catch (e) {
@@ -180,9 +180,9 @@ export const createPaymentSchema = z.object({
 
     }, z.number()),
     invoiceId: z.coerce.number().min(1, { message: "Invoice is required" }),
-    cardNumber: preprocess((val:any) => {
+    cardNumber: preprocess((val: any) => {
         try {
-            return ""+(val as string).replace(/\s/g,'');
+            return "" + (val as string).replace(/\s/g, '');
         } catch (e) {
             return val;
         }
@@ -195,7 +195,7 @@ export const createPaymentSchema = z.object({
     country: z.any(),
     address: z.any(),
     zipCode: z.any(),
-    refNumber : z.any(),
+    refNumber: z.any(),
 
 });
 
@@ -627,4 +627,22 @@ export function getUpdateSchema(url: string) {
 
 }
 
+
+
+
+export const issueSchema = z.object({
+    details: z.string().min(1, { message: "Details are required" }),
+    address: z.string().min(1, { message: "Address is required" }),
+    status: z.enum(['Open', 'InProgress', 'Closed', 'OnHold']),
+    issueTypeId: z.number().min(1, { message: "Issue type is required" }),
+    locationId: z.number().min(1, { message: "Location is required" }),
+    clientId: z.number().min(1, { message: "Client is required" }),
+    userId: z.coerce.number().optional().or(z.literal(undefined)),
+    assigendToId: z.coerce.number().optional().or(z.literal(undefined)),
+    happenedAt: z.string().optional(),
+    geoLocation: z.object({
+        lat: z.number(),
+        lng: z.number()
+    }).optional()
+});
 
