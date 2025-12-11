@@ -26,6 +26,7 @@ export enum Resource {
     UserDevice = "user-devices",
     EmployeeShift_SelfSchedule = EmployeeShift + "/self-schedule",
     Map = "map",
+    Issue= "issues",
 }
 
 

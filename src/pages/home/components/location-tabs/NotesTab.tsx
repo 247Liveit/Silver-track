@@ -5,8 +5,20 @@ import { useAuthHook } from "@/providers/authContext";
 import { getUTCDateTime } from "@/lib/utils";
 import PopupModal from "@/components/shared/popup-modal";
 import NoteForm from "./NoteForm";
+import { useGetSingle } from "@/lib/api/queries/generic";
+import { PaginationApiType } from "@/types/table/PaginationTypes";
+import { Note } from "@/types/types";
 
-export default function NotesTab({ issueId,notes }: {issueId:number, notes: { id: number, text: string, created_at: Date }[] }) {
+export default function NotesTab({ issueId}: {issueId:number, notes: { id: number, text: string, created_at: Date }[] }) {
+
+
+    const { data: notes, refetch } = useGetSingle<Note[]>(
+    `/shared/notes/issues/${issueId}`,
+    {},
+    [] 
+  );
+
+
 
   const auth = useAuthHook();
   return (
@@ -22,6 +34,7 @@ export default function NotesTab({ issueId,notes }: {issueId:number, notes: { id
                 item={{ password: "", system: "tracking" }}
                 url={`/shared/notes/issues`} redirectUrl=''
                 edit={true} onSave={() => {
+                  refetch(); 
                   onClose();
                 }}
                 validationSchema={createLocationNoteSchema}
@@ -32,16 +45,20 @@ export default function NotesTab({ issueId,notes }: {issueId:number, notes: { id
             }}
           />
         </div>
-        {notes.map(note => (
-          <div key={note.id} className="p-2 border-b">
-
-            <span className="bg-orange-300 rounded-lg p-1 text-sm mr-1">
-              {note.created_at ? getUTCDateTime(new Date(note.created_at)).substring(16, -1) + " " : ''}
-            </span>
-            <p className="text-black">
-              {note.text}</p>
-          </div>
-        ))}
+{!notes || notes.length === 0 ? (
+          <p className="text-gray-500">No notes yet</p>
+        ) : (
+          notes.map(note => (
+            <div key={note.id} className="p-2 border-b">
+              <span className="bg-orange-300 rounded-lg p-1 text-sm mr-1">
+                {note.created_at ? getUTCDateTime(new Date(note.created_at)).substring(16) + " " : ''}
+              </span>
+              <p className="text-black">
+                {note.text}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </TabsContent>
   )
