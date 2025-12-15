@@ -145,3 +145,16 @@ export type Note = {
   noteableType: string;
   created_at: string;
 }
+
+
+export type Attachment = {
+  id: number;
+  path: string;
+  originalName: string;
+  type: string;
+  modelId: number;
+  attachableType: string;
+  created_at: string;
+}
+
+

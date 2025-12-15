@@ -32,7 +32,7 @@ export default function IssueInfo({ issue, className }: { issue: Issue | null, c
                         <TabsTrigger className="font-semibold text-md" value="photos">Photos</TabsTrigger>
                     </TabsList>
                     <NotesTab issueId={issue.id} notes={issue.notes || []} />
-                    <PhotosTab attachments={issue.attachments || []} />
+                    <PhotosTab  issueId={issue.id}/>
 
                 </Tabs>
             </div>

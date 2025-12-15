@@ -264,9 +264,7 @@ export type IssueType = {
 
 export enum IssueStatus {
     Open = "Open",
-    InProgress = "InProgress",
-    Closed = "Closed",
-    OnHold = "OnHold"
+    Closed = "Closed"
 }
 
 export type Issue = {
@@ -288,6 +286,7 @@ export type Issue = {
     notes?: { id: number, text: string,created_at:Date }[];
     created_at: Date;
     updated_at: Date;
+    happenedAt:string;
 }
 
 export type Checkpoint = {

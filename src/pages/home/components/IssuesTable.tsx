@@ -16,7 +16,7 @@ import { useToast } from "@/components/ui/use-toast";
 import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
 import { issueSchema } from "@/lib/validation/zodSchema";
 import IssueForm from "./forms/IssueForm";
-
+import { Badge } from "@/components/ui/badge";
 export default function IssuesTable({ items: data, setItems }: { items: PaginationApiType<Issue> | undefined, setItems: any }) {
     const [isEdit, setIsEdit] = useState(false);
     const [searchParams,] = useSearchParams();
@@ -32,14 +32,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
    
     const handleSelection = function (selectedItem: Issue, type: number) { 
         setCurrentItem(selectedItem);
-          if (type === 1 && selectedItem.status === 'Closed') {
-        toast({
-            title: "Cannot Edit",
-            description: "Closed issues cannot be edited. You can only view them.",
-            variant: "destructive"
-        });
-        return;
-    }
+   
         switch (type) {
             case 1: 
                 setIsEdit(true);
@@ -73,7 +66,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                 <div className="max-w-full overflow-x-auto">
                     <table className="w-full table-auto">
                         <TableHeader
-                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map", "Assigned To","Status","Actions"]}
+                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map", "Assigned To","Actions"]}
                             withActions={false}
                         />
                         <tbody>
@@ -84,9 +77,10 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                         className="cursor-pointer"
                              
                                     >
+                                   
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <h5 className="font-semibold text-black text-center">
-                                                {item.id}
+                                                {item.id}{(item.status == "Open") ? <Badge variant="destructive">Needs an Update</Badge> : ""}
                                             </h5>
                                         </td>
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
@@ -137,18 +131,14 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                                 {item.assigendTo?.name}
                                             </h5>
                                         </td>
-                                              <td className="border-b border-[#eee] py-2 px-2 text-center">
-                                            <h5 className="text-black">
-                                                {item.status}
-                                            </h5>
-                                        </td>
+                                            
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <TableActions
                                                 link='/issues'
                                                 handleAction={handleSelection}
                                                 Item={item}
                                                 viewShowBtn={true}
-                                                
+                                                 showEdit={item.status !== 'Closed'} 
                                             />
                                         </td>
                                     </tr>
@@ -189,7 +179,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                     <h5 className='text-2xl font-bold px-4 mb-4'>Update Issue</h5> 
                     {currentItem ? (
                         <CustomFormLayout
-                            key="edit"
+                           key={`edit-${currentItem?.id}`}
                             item={currentItem}
                             url='/issues'
                             redirectUrl=''
@@ -208,7 +198,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                 setIsOpen("");
                             }}
                         >
-                            <IssueForm />  
+                            <IssueForm issue={currentItem} />  
                         </CustomFormLayout>
                     ) : (
                         <p className="text-center py-4">Please Wait...</p>
@@ -232,7 +222,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                 <Button
                                     className="flext-1 bg-red-500 disabled:bg-gray-500"
                                     onClick={() => {
-                                        onDelete(`/user-groups/${currentItem?.id}`, currentItem, axios, toast, setItems);
+                                        onDelete(`/issues/${currentItem?.id}`, currentItem, axios, toast, setItems);
                                         setIsOpenDialog(false);
                                     }}>
                                     Yes
