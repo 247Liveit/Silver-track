@@ -15,6 +15,7 @@ const useAxiosAuth = () => {
                 if (!config.headers['Authorization']) {
                     config.headers['Authorization'] = `Bearer ${auth.tokens?.access_token}`
                 }
+                config.headers['X-System-Type'] = 'SILVERTRACK';
                 return config;
             },
             error => Promise.reject(error)
@@ -34,6 +35,7 @@ const useAxiosAuth = () => {
                     }
                     if (prevRequest) {
                         prevRequest.headers['Authorization'] = `Bearer ${newToken?.access_token}`;
+                           prevRequest.headers['X-System-Type'] = 'SILVERTRACK';
                         return axiosAuth(prevRequest)
                     } else {
                         return Promise.reject(err)
