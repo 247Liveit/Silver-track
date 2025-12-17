@@ -13,7 +13,8 @@ export type User = {
   imageUrl?: string;
   orders?: Order[];
   role: string
-  employee: Employee
+  employee: Employee;
+  verified: boolean;
 };
 export type UserGroup = {
   id: number;
