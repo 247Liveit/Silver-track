@@ -636,6 +636,7 @@ export const issueSchema = z.object({
     details: z.string().min(1, { message: "Details are required" }),
     address: z.string().min(1, { message: "Address is required" }),
     status: z.enum(['Open', 'Closed']),
+    priority:z.enum(['Normal','Urgent']),
     keepOpen: z.coerce.boolean().optional(),
     issueTypeId: z.coerce.number().min(1, { message: "Issue type is required" }),
     locationId: z.number().min(1, { message: "Location is required" }),
