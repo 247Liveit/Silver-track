@@ -237,6 +237,13 @@ export enum IssueLevels {
     Level3 = "Level3",
 
 }
+export enum IssuePriority {
+  Normal = "Normal",
+  Urgent = "Urgent"
+}
+
+
+
  export  const LeveloptionsArray = Object.keys(IssueLevels)
     .map(key => ({
       label: key, // Use the enum key as the label
@@ -277,6 +284,7 @@ export type Issue = {
     locationId: number;
     clientId: number;
     issueType?: IssueType;
+    priority:IssuePriority;
     location?: Location;
     client?: Client;
     geoLocation?: {lat:number, lng:number};

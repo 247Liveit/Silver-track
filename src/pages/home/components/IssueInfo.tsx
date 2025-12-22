@@ -22,6 +22,7 @@ export default function IssueInfo({ issue, className }: { issue: Issue | null, c
             </div>
             <div className={``}>
                 <CustomInputSimple inputClassName="text-black" name="status" title="Status" placeholder="" defaultValue={issue?.status + ""} disabled={true} />
+                 <CustomInputSimple inputClassName={`${issue?.priority === 'Urgent' ? 'text-red-600 font-semibold' : 'text-black'}`} name="priority" title="Priority" placeholder="" defaultValue={issue?.priority + ""} disabled={true} />
                 <CustomInputSimple inputClassName="text-black" name="Created" title="Created Date" placeholder="" defaultValue={issue.created_at ? getUTCDateTime(new Date(issue.created_at)).substring(16, -1) : ''} disabled={true} />
                 <CustomInputSimple inputClassName="text-black" name="closedDate" title="Closed Date" placeholder="" defaultValue={issue.closedDate ? getUTCDateTime(new Date(issue.closedDate)).substring(16, -1) : ''} disabled={true} />
             </div>

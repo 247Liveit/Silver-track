@@ -7,14 +7,14 @@ import { FormContext } from "@/providers/formContext";
 import { useGet, useGetSingle } from "@/lib/api/queries/generic";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { Client, User } from "@/types/types";
-import { IssueStatus, Location } from "@/types/pagesData";
+import { IssuePriority, IssueStatus, Location } from "@/types/pagesData";
 import AdvanceSelect from "@/components/shared/form/inputs/AdvanceSelect";
 import { debounce } from "@/lib/utils";
 import { Issue } from "@/types/pagesData";
 import CustomInput from "@/components/shared/form/inputs/CustomInput";
 
 export default function IssueForm({ issue }: { issue: Issue | null }) {
-    const { errors, getValues, watch ,setValue} = useContext(FormContext);
+    const { errors, getValues, watch, setValue } = useContext(FormContext);
     const [dropSearch, setDropSearch] = useState<string>("");
 
     const handleSearch = useCallback(
@@ -64,14 +64,16 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
     const currentGeoLat = watch('geoLocation.lat');
     const currentGeoLng = watch('geoLocation.lng');
 
-    const statusOptions = useMemo(() => {
-        const allStatuses = Object.values(IssueStatus).map(status => ({
-            value: status,
-            label: status.replace(/([A-Z])/g, ' $1').trim()
+    const getEnumOptions = useCallback((enumObj: object) => {
+        return Object.values(enumObj).map(value => ({
+            value: value,
+            label: value.replace(/([A-Z])/g, ' $1').trim()
         }));
+    }, []);
 
-        return allStatuses;
-    }, [keepOpen]);
+    const statusOptions = useMemo(() => getEnumOptions(IssueStatus), [keepOpen, getEnumOptions]);
+    const priorityOptions = useMemo(() => getEnumOptions(IssuePriority), [keepOpen, getEnumOptions]);
+
 
     const { data: locationsData, isLoading: isLoadingLocations } = useGet<Location>(
         'locations',
@@ -122,7 +124,7 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
 
     return (
         <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
+            <div className="col-span-2">
                 <CustomInput
                     title="Report Details"
                     name="details"
@@ -132,18 +134,18 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                 />
             </div>
 
-          
-                   <CustomInputSimple
-                    className='dark:text-black'
-                    title="User"
-                    name="userId"
-                    type="text"
-                    placeholder='Please Select User'
-                    icon={<Building2Icon />}
-                    disabled={true}
-                    inputClassName="text-black"
-                    defaultValue={issue?.user?.name || ''}
-                />
+
+            <CustomInputSimple
+                className='dark:text-black'
+                title="User"
+                name="userId"
+                type="text"
+                placeholder='Please Select User'
+                icon={<Building2Icon />}
+                disabled={true}
+                inputClassName="text-black"
+                defaultValue={issue?.user?.name || ''}
+            />
 
             <AdvanceSelect
                 className="dark:text-black mt-4"
@@ -192,7 +194,7 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                 </div>
             )}
 
-        
+
 
             <div className="col-md-12 col-lg-6">
                 <CustomSelect
@@ -207,7 +209,20 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                 />
             </div>
 
-                   {currentStatus === 'Closed' && (
+            <div className="col-md-12 col-lg-6">
+                <CustomSelect
+                    className='dark:text-black'
+                    title="Priority"
+                    name="priority"
+                    options={priorityOptions}
+                    selected={issue?.priority || undefined}
+                    placeholder='Select Priority...'
+                    icon={<></>}
+                    type='single'
+                />
+            </div>
+
+            {currentStatus === 'Closed' && (
                 <div className="col-md-12 col-lg-6">
                     <CustomInputSimple
                         title="Closed Date"
@@ -223,15 +238,15 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
             )}
 
 
- 
-    {!isLoadingIssueTypes && isFetchedIssueTypes ? (
+
+            {!isLoadingIssueTypes && isFetchedIssueTypes ? (
                 <div className="col-md-12 col-lg-6">
                     <AdvanceSelect
                         className='dark:text-black'
                         title="Issue Type"
                         name="issueTypeId"
                         options={issueTypesOptions}
-                       selected={issue?.assigendTo?.id || getValues("assigendToId")}
+                        selected={issue?.assigendTo?.id || getValues("assigendToId")}
                         placeholder='Select Issue Type...'
                         icon={<AlertCircleIcon />}
                         type='single'
@@ -243,7 +258,7 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                 </div>
             )}
 
-     <div className="col-md-12 col-lg-6">
+            <div className="col-md-12 col-lg-6">
                 <CustomInputSimple
                     title="Happened At"
                     name="happenedAt"
@@ -252,8 +267,8 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                     inputClassName="text-black"
                     defaultValue={issue?.happenedAt || ''}
                     disabled={true}
-                    
-                    
+
+
                 />
             </div>
             <div className="col-md-12 col-lg-6">
@@ -269,10 +284,10 @@ export default function IssueForm({ issue }: { issue: Issue | null }) {
                 />
             </div>
 
-  
 
-          
-      
+
+
+
 
             <div className="col-md-12 col-lg-6">
                 <CustomInputSimple

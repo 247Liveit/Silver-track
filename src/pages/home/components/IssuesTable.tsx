@@ -66,7 +66,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                 <div className="max-w-full overflow-x-auto">
                     <table className="w-full table-auto">
                         <TableHeader
-                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map", "Assigned To","Actions"]}
+                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map","Priority","Assigned To","Actions"]}
                             withActions={false}
                         />
                         <tbody>
@@ -125,6 +125,11 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                                     <MapIcon className="w-5 h-5 text-blue-600" />
                                                 </button>
                                             </div>
+                                        </td>
+                                           <td className="border-b border-[#eee] py-2 px-2 text-center">
+                                            <h5 className={`${item.priority === 'Urgent'?'text-red-600 font-semibold' : 'text-black'}`}>
+                                                {item.priority}
+                                            </h5>
                                         </td>
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <h5 className="text-black">
