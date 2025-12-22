@@ -558,7 +558,9 @@ export const EmployeeShiftUpdateSchema = z.object({
 
 
 });
-
+export const noteSchema = z.object({
+  notes: z.string().optional(),
+});
 
 export function getCreateSchema(url: string) {
 

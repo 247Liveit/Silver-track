@@ -7,6 +7,7 @@ import {useState } from "react";
 import LocationInfoTab from "./tabs/LocationInfoTab";
 import IssueTypesTab from "./tabs/IssueTypesTab";
 import CheckpointTab from "./tabs/CheckpointsTab";
+import NoteTab from "./tabs/NoteTab";
 
 export default function ClientLocations({ client, className }: { client: Client | null, className?: string | undefined }) {
 
@@ -48,11 +49,14 @@ const activeLocation = selectedLocation || data?.locations?.[0] || null;
                     <Tabs defaultValue="locationInfo" className="" key={selectedLocation?.id} >
                         <TabsList className="grid grid-cols-2  w-full lg:w-fit lg:flex lg:items-left gap-2">
                             <TabsTrigger value="locationInfo">Location Info</TabsTrigger>
+                            <TabsTrigger value="noteInfo">Note Info </TabsTrigger>
                             <TabsTrigger value="issues">Issues Typs</TabsTrigger>
                             <TabsTrigger value="Checkpoints">Checkpoints</TabsTrigger>
+
                         </TabsList>
                         <div className="w-full border-b mt-1 mb-1"></div>
                         <LocationInfoTab   location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
+                        <NoteTab  clientId ={client.id}/>
                         <IssueTypesTab location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                         <CheckpointTab  clientId ={client.id}     location={selectedLocation ? selectedLocation : (data?.locations.length ? data?.locations[0] : null)} />
                     </Tabs>
