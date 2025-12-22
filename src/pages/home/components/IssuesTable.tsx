@@ -98,7 +98,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                                 </button>
                                             </div>
                                         </td>
-                                        <td className="border-b border-[#eee] py-2 px-2 bg-gray-500 text-center">
+                                        <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <h5 className="text-black">
                                                 {item.assigendTo?.name}
                                             </h5>
@@ -109,7 +109,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                         </tbody>
                     </table>
                     {data?.links &&
-                        <Pagination meta={data.meta} links={data.links} url={`/dashboard/clients?${search ? "search=" + search + "&" : ""}`} />
+                        <Pagination meta={data.meta} links={data.links} url={`/dashboard/?${search ? "search=" + search + "&" : ""}`} />
                     }
                 </div>
                 <div className="flex gap-3 mb-4">
