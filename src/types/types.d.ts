@@ -138,4 +138,10 @@ export type Link = { name: string, href: string, icon: React.ForwardRefExoticCom
 
 export type Links = Link[];
 
-
+export type Note = {
+  id: number;
+  text: string;
+  modelId: number;
+  noteableType: string;
+  created_at: string;
+}

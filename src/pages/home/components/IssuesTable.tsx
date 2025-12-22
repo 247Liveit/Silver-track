@@ -1,6 +1,5 @@
 import TableHeader from "@/components/TableHeader";
 import { useState } from "react";
-import { useModalHook } from "@/providers/modalContext";
 import Pagination from "@/components/Pagination";
 import { PaginationApiType } from "@/types/table/PaginationTypes";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -9,28 +8,62 @@ import { getUTCDateTime } from "@/lib/utils";
 import { Modal } from "@/components/ui/modal";
 import IssueInfo from "./IssueInfo";
 import { MapIcon } from "lucide-react";
+import TableActions from "@/components/TableActions";
+import { Button } from "@/components/ui/button";
+import { onDelete } from "@/lib/api/axios/delete-item";
+import useAxiosAuth from "@/lib/api/axios/hooks/useAxiosAuth";
+import { useToast } from "@/components/ui/use-toast";
+import CustomFormLayout from "@/components/shared/form/CustomFormLayout";
+import { issueSchema } from "@/lib/validation/zodSchema";
+import IssueForm from "./forms/IssueForm";
 
 export default function IssuesTable({ items: data, setItems }: { items: PaginationApiType<Issue> | undefined, setItems: any }) {
+    const [isEdit, setIsEdit] = useState(false);
     const [searchParams,] = useSearchParams();
     const search = searchParams.get('search') || '';
+    const { toast } = useToast()
     const navigate = useNavigate();
-
+    const axios = useAxiosAuth();
     const [isOpen, setIsOpen] = useState("none");
     const [currentItem, setCurrentItem] = useState<Issue | null>(data ? (data.items?.length > 0 ? data[0] : null) : null);
-    
-    const handleSelection = function (selectedItem, type) {
-        setCurrentItem(prev => selectedItem);
-        setIsOpen(type);
+    const [openDeleteDialog, setIsOpenDialog] = useState(false);
+
+
+   
+    const handleSelection = function (selectedItem: Issue, type: number) { 
+        setCurrentItem(selectedItem);
+          if (type === 1 && selectedItem.status === 'Closed') {
+        toast({
+            title: "Cannot Edit",
+            description: "Closed issues cannot be edited. You can only view them.",
+            variant: "destructive"
+        });
+        return;
+    }
+        switch (type) {
+            case 1: 
+                setIsEdit(true);
+                setIsOpen("edit");
+                break;
+            case 2: 
+                setIsEdit(false);
+                setIsOpen("issueReport");
+                break;
+            case 3: 
+                setIsOpenDialog(true);
+                break;
+        }
     };
 
+
     const handleMapNavigation = (issue: Issue, event: React.MouseEvent) => {
-        event.stopPropagation(); 
-        navigate('/dashboard/gps-map', { 
-            state: { 
+        event.stopPropagation();
+        navigate('/dashboard/gps-map', {
+            state: {
                 selectedIssue: issue,
                 clientId: issue.client?.id,
                 locationId: issue.location?.id
-            } 
+            }
         });
     };
 
@@ -39,17 +72,17 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
             <div className="w-full rounded-sm border border-stroke bg-white pb-2.5 shadow-default sm:px-7.5 xl:pb-1 mt-3">
                 <div className="max-w-full overflow-x-auto">
                     <table className="w-full table-auto">
-                        <TableHeader 
-                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map", "Assigned To"]} 
-                            withActions={false} 
+                        <TableHeader
+                            headers={["ID", 'Client', 'Location', "Issue", "Create at", "Create By", "Level", "Map", "Assigned To","Status","Actions"]}
+                            withActions={false}
                         />
                         <tbody>
                             {data?.items?.map(function (item) {
                                 return (
-                                    <tr 
-                                        key={item.id} 
-                                        className="cursor-pointer" 
-                                        onClick={() => { handleSelection(item, "issueReport") }}
+                                    <tr
+                                        key={item.id}
+                                        className="cursor-pointer"
+                             
                                     >
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <h5 className="font-semibold text-black text-center">
@@ -81,6 +114,7 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                                 {item.user?.name}
                                             </h5>
                                         </td>
+                                        
                                         <td className="border-b border-[#eee] py-2 px-2 text-center">
                                             <h5 className="text-black">
                                                 {item.issueType?.level}
@@ -102,6 +136,20 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                                             <h5 className="text-black">
                                                 {item.assigendTo?.name}
                                             </h5>
+                                        </td>
+                                              <td className="border-b border-[#eee] py-2 px-2 text-center">
+                                            <h5 className="text-black">
+                                                {item.status}
+                                            </h5>
+                                        </td>
+                                        <td className="border-b border-[#eee] py-2 px-2 text-center">
+                                            <TableActions
+                                                link='/issues'
+                                                handleAction={handleSelection}
+                                                Item={item}
+                                                viewShowBtn={true}
+                                                
+                                            />
                                         </td>
                                     </tr>
                                 )
@@ -125,6 +173,75 @@ export default function IssuesTable({ items: data, setItems }: { items: Paginati
                         </header>
                         <IssueInfo issue={currentItem} />
                     </Modal>
+                </div>
+
+
+                <div className="flex gap-3 mb-4">
+              <Modal
+                    key="edit"
+                    isOpen={isOpen === 'edit'}
+                    onClose={() => {
+                        setIsOpen("");
+                        setCurrentItem(null);
+                    }}
+                    className="!bg-background !px-1"
+                >
+                    <h5 className='text-2xl font-bold px-4 mb-4'>Update Issue</h5> 
+                    {currentItem ? (
+                        <CustomFormLayout
+                            key="edit"
+                            item={currentItem}
+                            url='/issues'
+                            redirectUrl=''
+                            edit={isEdit && isOpen == "edit"}
+                            validationSchema={issueSchema}
+                            onSave={(updatedIssue: Issue) => {
+                                setItems((prev: PaginationApiType<Issue>) => {  
+                                    const newItems = prev.items.map(item => {
+                                        if (item.id === updatedIssue.id) {
+                                            return updatedIssue;
+                                        }
+                                        return item;
+                                    });
+                                    return { ...prev, items: newItems };
+                                });
+                                setIsOpen("");
+                            }}
+                        >
+                            <IssueForm />  
+                        </CustomFormLayout>
+                    ) : (
+                        <p className="text-center py-4">Please Wait...</p>
+                    )}
+                </Modal>
+
+                </div>
+
+
+                <div className="flex gap-3 mb-4">
+                    <Modal
+                        key={"delete"}
+                        userPopup={true}
+                        isOpen={openDeleteDialog}
+                        onClose={() => { setIsOpenDialog(false) }}
+                        className={'!bg-background !px-1'}
+                    >
+                        <div className="rounded-md bg-gray-50 p-4 md:p-6">
+                            <p>Are you sure you want to delete?</p>
+                            <div className="flex items-center justify-between mt-4">
+                                <Button
+                                    className="flext-1 bg-red-500 disabled:bg-gray-500"
+                                    onClick={() => {
+                                        onDelete(`/user-groups/${currentItem?.id}`, currentItem, axios, toast, setItems);
+                                        setIsOpenDialog(false);
+                                    }}>
+                                    Yes
+                                </Button>
+                                <Button className="flext-1" onClick={() => setIsOpenDialog(false)}>No</Button>
+                            </div>
+                        </div>
+                    </Modal>
+
                 </div>
             </div>
         </>
